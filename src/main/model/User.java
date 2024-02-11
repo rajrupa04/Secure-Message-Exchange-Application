@@ -28,8 +28,6 @@ public class User {
 
     }
 
-    //This function should first get a user from the userMap class (to be implemented) - because existing
-    //then check
     public boolean userLogIn(Integer userID, String username, String password) {
         return this.userID.equals(userID)
                 && this.username.equals(username)

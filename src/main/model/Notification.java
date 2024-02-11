@@ -39,5 +39,9 @@ public class Notification {
         }
     }
 
+    public HashMap getNotifications() {
+        return this.notifications;
+    }
+
 
 }

@@ -20,4 +20,8 @@ public class MessageFolder {
     public Message getMessageByID(Integer messageID) {
         return this.messageFolder.get(messageID);
     }
+
+    public HashMap<Integer, Message> getMessageFolder() {
+        return this.messageFolder;
+    }
 }
