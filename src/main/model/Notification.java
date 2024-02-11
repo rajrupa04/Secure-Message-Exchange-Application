@@ -12,27 +12,27 @@ public class Notification {
         notifications = new HashMap<>();
     }
 
-    // Method to add a notification for a specific urgency level
+    //EFFECTS: adds a notification for a specific urgency level
     public void addNotification(UrgencyLevel urgencyLevel, String message) {
         notifications.put(urgencyLevel, message);
     }
 
-    // Method to remove a notification for a specific urgency level
+    //EFFECTS: removes a notification for a specific urgency level
     public void removeNotification(UrgencyLevel urgencyLevel) {
         notifications.remove(urgencyLevel);
     }
 
-    // Method to get the notification message for a specific urgency level
+    //EFFECTS: gets the notification message for a specific urgency level
     public String getNotification(UrgencyLevel urgencyLevel) {
         return notifications.get(urgencyLevel);
     }
 
-    // Method to remove all notifications
+    //EFFECTS: removes all notifications
     public void clearNotifications() {
         notifications.clear();
     }
 
-    // Method to update the notification message for a specific urgency level
+    //EFFECTS: updates the notification message for a specific urgency level
     public void updateNotification(UrgencyLevel urgencyLevel, String newMessage) {
         if (notifications.containsKey(urgencyLevel)) {
             notifications.put(urgencyLevel, newMessage);
