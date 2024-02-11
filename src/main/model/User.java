@@ -18,22 +18,22 @@ public class User {
     private Integer minimumLimitForUserID = 10000000;
     private Integer maximumLimitForUserID = 99999999;
 
-    public void createNewUser(String username, String password) throws NoSuchAlgorithmException {
-        KeyGenerator keyGen = KeyGenerator.getInstance("DES");
+    public void createNewUser(String username, String password) {
+
         this.username = username;
         this.password = password;
         this.userID = generateID();
         this.hub = new Hub();
-        this.privateKey = keyGen.generateKey();
+
 
     }
 
+    //This function should first get a user from the userMap class (to be implemented) - because existing
+    //then check
     public boolean userLogIn(Integer userID, String username, String password) {
-        return (this.userID == userID)
-                &&
-                (this.username == username)
-                &&
-                (this.password == password);
+        return this.userID.equals(userID)
+                && this.username.equals(username)
+                && this.password.equals(password);
     }
 
     public Integer getUserID() {

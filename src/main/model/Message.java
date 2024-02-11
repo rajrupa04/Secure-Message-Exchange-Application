@@ -1,5 +1,6 @@
 package model;
 
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.KeyGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -8,7 +9,7 @@ import model.Encryption;
 //This class represents a message. Each individual message will have properties like a sender, recipient,
 //individual message ID, level of urgency and whether it has been encrypted successfully or not.
 
-public class Message {
+public class Message extends Encryption {
     private final User sender;
     private final User recipient;
     private final Integer messageID;
@@ -21,13 +22,14 @@ public class Message {
     private SecretKey sharedKey;
 
     public Message(User sender, User recipient, String msgText, UrgencyLevel urgencyLevel)
-            throws NoSuchAlgorithmException {
+            throws NoSuchAlgorithmException, NoSuchPaddingException {
+        super();
         KeyGenerator kg = KeyGenerator.getInstance("DES");
         this.sender = sender;
         this.recipient = recipient;
         this.messageID = generateMessageID();
         this.urgencyLevel = urgencyLevel;
-        this.encryptionStatus = findEncryptionStatus(this.messageID);
+        this.encryptionStatus = false;
         this.sharedKey = kg.generateKey();
 
     }
@@ -38,11 +40,6 @@ public class Message {
 
     public String getEncryptedMessageText() {
         return this.encryptedMessageText;
-    }
-
-    public Boolean findEncryptionStatus(Integer messageID) {
-        return true;
-
     }
 
     public User getSender() {

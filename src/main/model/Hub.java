@@ -16,12 +16,14 @@ public class Hub {
     private Reminder reminder;
     private ArrayList<User> contactList;
     private MessageFolder messageFolder;
+    private Notification notifications;
 
     public Hub() {
         this.note = new Note();
         this.reminder = new Reminder();
         this.contactList = new ArrayList<User>();
         this.messageFolder = new MessageFolder();
+        this.notifications = new Notification();
     }
 
     public Note getNote() {
@@ -36,6 +38,10 @@ public class Hub {
         return this.contactList;
     }
 
+    public Notification getNotifications() {
+        return this.notifications;
+    }
+
     public MessageFolder getMessageFolder() {
         return this.messageFolder;
     }
@@ -47,7 +53,9 @@ public class Hub {
         String encryptedMessage = e.encryptMessage(messageContent, newMsg.getSharedKey());
         newMsg.setEncryptedMessageText(encryptedMessage);
         MessageFolder recipientMessageFolder = recipient.getHub().getMessageFolder();
+        Notification recipientNotifications = recipient.getHub().getNotifications();
         recipientMessageFolder.addNewMessage(newMsg.getMessageID(),newMsg);
+        recipientNotifications.addNotification(urgency,"You have 1 new message of type: " + urgency);
         return newMsg.getMessageID();
 
     }
