@@ -39,7 +39,7 @@ public class Notification {
         }
     }
 
-    public HashMap getNotifications() {
+    public HashMap getHashMapOfNotifications() {
         return this.notifications;
     }
 

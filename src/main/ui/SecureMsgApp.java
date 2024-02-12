@@ -3,8 +3,13 @@ package ui;
 import model.*;
 
 
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 
@@ -113,13 +118,23 @@ public class SecureMsgApp {
 
     private void displayHubNotifications(Hub userHub) {
         System.out.println("Checking notifications...");
-        Notification userNotif = userHub.getNotifications();
-        if (userNotif.getNotifications().isEmpty()) {
+        HashMap userNotif = userHub.getNotifications().getHashMapOfNotifications();
+        if (userNotif.isEmpty()) {
             System.out.println("You have no new notifications");
         } else {
-            System.out.println("ok");
+            displayNotifications(userNotif);
         }
     }
+
+    private void displayNotifications(HashMap h) {
+        System.out.println("Notifications:");
+        System.out.println(h);
+    }
+
+
+
+
+
 
     private void displayHubMessageFolder(Hub userHub) {
         System.out.println("Fetching your message folder...");
@@ -127,8 +142,23 @@ public class SecureMsgApp {
         if (userMsgFolder.getMessageFolder().isEmpty()) {
             System.out.println("You do not have any messages in your folder yet.");
         } else {
-            System.out.println("wait");
+            System.out.println("Enter the message ID of the message you would like to access.");
+            Integer i = input.nextInt();
+            displayMessage(userHub, i);
         }
+    }
+
+    private void displayMessage(Hub userHub, Integer i) {
+        try {
+            String decryptedMsg = userHub.receiveMessage(user,i);
+            System.out.println(decryptedMsg);
+        } catch (NoSuchPaddingException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     private void displayHubContacts(Hub userHub) {
