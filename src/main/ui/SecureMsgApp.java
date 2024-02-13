@@ -5,6 +5,7 @@ import model.*;
 
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -41,48 +42,118 @@ public class SecureMsgApp {
                 displayLoginPageForExistingUser();
             }
 
-            System.out.println("Would you like to continue to your hub or quit? (enter q to quit)");
-            String ans = input.next();
-            if (ans.equals("q")) {
-                break;
-            } else {
-                System.out.println("Loading your hub...");
-                Hub userHub = user.getHub();
-                displayHub(userHub);
-                displayHubMenu();
-
-            }
-
+            hubOrQuit();
 
         }
 
 
     }
 
+    private void hubOrQuit() {
+        System.out.println("Would you like to continue to your hub or quit? (enter any key to continue, q to quit)");
+        String ans = input.next();
+        if (ans.equals("q")) {
+            System.exit(0);
+        } else {
+            System.out.println("Loading your hub...");
+            Hub userHub = user.getHub();
+            displayHub(userHub);
+            displayHubMenu();
+        }
+
+
+    }
+
+
     private void displayHubMenu() {
         System.out.println("You can carry out the following tasks:");
-        System.out.println("1. Add a new note\n2. Add a new reminder\n3.Add an existing user to your contact list");
-        System.out.println("4. Send a message to an existing user\n5.quit");
+        System.out.println("1. Add a new note\n2. Add a new reminder\n3. Add an existing user to your contact list");
+        System.out.println("4. Send a message to an existing user\n5. quit");
         System.out.println("Choose an action (1-5):");
         Integer choice = input.nextInt();
         interpretChoice(choice);
     }
 
+
+
     private void interpretChoice(Integer choice) {
         switch (choice) {
             case 1:
                 interpretChoiceOne();
-                break;
+                hubOrQuit();
+
 
             case 2:
                 interpretChoiceTwo();
-                break;
+                hubOrQuit();
 
+
+            case 3:
+                interpretChoiceThree();
+                hubOrQuit();
+
+            case 4:
+                try {
+                    interpretChoiceFour();
+                } catch (NoSuchPaddingException e) {
+                    throw new RuntimeException(e);
+                } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+                }
+                hubOrQuit();
             case 5:
                 System.exit(0);
 
 
         }
+    }
+
+    private void interpretChoiceFour() throws NoSuchPaddingException, NoSuchAlgorithmException {
+        System.out.println("You have chosen to send a message to an existing user.");
+        User sender = this.user;
+        System.out.println("Enter the user ID of the recipient.");
+        Integer rid = input.nextInt();
+        User recipient = userMap.getUser(rid);
+        System.out.println("State the urgency level of this message (1. REGULAR, 2. URGENT, 3. EMERGENCY)");
+        Integer ul = input.nextInt();
+        UrgencyLevel msgUrgency = chooseUrgency(ul);
+        System.out.println("Enter the contents of the message you'd like to send.");
+        String msgContents = input.next();
+        Integer messageID = 0;
+        try {
+            messageID = user.getHub().sendMessage(sender,recipient,msgContents,msgUrgency);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("Message sent! The message ID is: " + messageID);
+    }
+
+    private UrgencyLevel chooseUrgency(Integer ul) {
+        UrgencyLevel u = null;
+        switch (ul) {
+            case 1: u = UrgencyLevel.REGULAR;
+
+            case 2: u = UrgencyLevel.URGENT;
+
+            case 3: u = UrgencyLevel.EMERGENCY;
+
+            default:
+                System.out.println("Sorry, that's an invalid entry.");
+                break;
+
+        }
+        return u;
+    }
+
+    private void interpretChoiceThree() {
+        System.out.println("You have chosen to add an existing user to your contact list.");
+        ArrayList<User> contactList = user.getHub().getContactList();
+        System.out.println("Enter the user ID of the user you would like to add to your contact list:");
+        Integer id = input.nextInt();
+        User userToAdd = userMap.getUser(id);
+        contactList.add(userToAdd);
+        System.out.println("Added!");
     }
 
     private void interpretChoiceOne() {
