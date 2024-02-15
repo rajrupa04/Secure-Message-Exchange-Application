@@ -1,11 +1,14 @@
 package model;
 
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import model.Encryption;
 import model.Message;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 //This class represents a hub. Every user will have their own individualised hub, with personalized
 //information like notes, reminders, messages, contact list, and so on. Every user will be able to access their hub
@@ -47,7 +50,8 @@ public class Hub {
     }
 
     public Integer sendMessage(User sender, User recipient, String messageContent, UrgencyLevel urgency)
-            throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
+            throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException,
+            IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         Message newMsg = new Message(sender, recipient, messageContent, urgency);
         Encryption e = new Encryption();
         String encryptedMessage = e.encryptMessage(messageContent, newMsg.getSharedKey());

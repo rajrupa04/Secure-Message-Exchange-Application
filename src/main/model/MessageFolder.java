@@ -21,6 +21,10 @@ public class MessageFolder {
         return this.messageFolder.get(messageID);
     }
 
+    public boolean containsMessage(Integer messageID) {
+        return messageFolder.containsKey(messageID);
+    }
+
     public HashMap<Integer, Message> getMessageFolder() {
         return this.messageFolder;
     }

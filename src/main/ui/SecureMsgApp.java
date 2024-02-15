@@ -3,9 +3,12 @@ package ui;
 import model.*;
 
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -124,6 +127,12 @@ public class SecureMsgApp {
             messageID = user.getHub().sendMessage(sender,recipient,msgContents,msgUrgency);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
+        } catch (IllegalBlockSizeException e) {
+            throw new RuntimeException(e);
+        } catch (BadPaddingException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException(e);
         }
 
         System.out.println("Message sent! The message ID is: " + messageID);
@@ -201,11 +210,6 @@ public class SecureMsgApp {
         System.out.println("Notifications:");
         System.out.println(h);
     }
-
-
-
-
-
 
     private void displayHubMessageFolder(Hub userHub) {
         System.out.println("Fetching your message folder...");
