@@ -52,6 +52,9 @@ public class HubTest {
             Integer messageId = senderHub.sendMessage(sender,recipient,messageContent,urgency);
             assertNotNull(messageId);
             assertTrue(recipientHub.getMessageFolder().containsMessage(messageId));
+            assertFalse(senderHub.getMessageFolder().containsMessage(messageId));
+            assertEquals(recipientHub.getNotifications().getNotification(urgency),
+                    "You have 1 new message of type: REGULAR");
         } catch (NoSuchAlgorithmException e) {
             fail("Unexpected NoSuchAlgorithmException");
         } catch (NoSuchPaddingException e) {

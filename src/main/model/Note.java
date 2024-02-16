@@ -23,11 +23,7 @@ public class Note {
         return this.listOfNotes.size();
     }
 
-    public String getMostRecentNote() {
-        return this.listOfNotes.get(this.getNumberOfNotes() - 1);
-    }
-
-    public void removeMostRecentNotes(Integer noteID) {
+    public void removeNote(Integer noteID) {
         this.listOfNotes.remove(noteID);
     }
 
@@ -35,7 +31,7 @@ public class Note {
         if (listOfNotes.containsKey(noteID)) {
             return listOfNotes.get(noteID);
         } else {
-            return "Not Found";
+            return "Note not found!";
         }
     }
 

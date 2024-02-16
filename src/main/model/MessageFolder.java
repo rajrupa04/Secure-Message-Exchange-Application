@@ -6,6 +6,7 @@ package model;
 import java.util.HashMap;
 import model.Encryption;
 
+
 public class MessageFolder {
     private HashMap<Integer, Message> messageFolder;
 

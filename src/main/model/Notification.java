@@ -24,7 +24,12 @@ public class Notification {
 
     //EFFECTS: gets the notification message for a specific urgency level
     public String getNotification(UrgencyLevel urgencyLevel) {
-        return notifications.get(urgencyLevel);
+        if (notifications.containsKey(urgencyLevel)) {
+            return notifications.get(urgencyLevel);
+        } else {
+            return null;
+        }
+
     }
 
     //EFFECTS: removes all notifications

@@ -66,7 +66,7 @@ public class Message extends Encryption {
         return this.encryptionStatus;
     }
 
-    private Integer generateMessageID() {
+    public Integer generateMessageID() {
         int generatedID = (int)Math.floor(minimumLimitForMessageID
                 + ((maximumLimitForMessageID - minimumLimitForMessageID + 1) * Math.random()));
 
