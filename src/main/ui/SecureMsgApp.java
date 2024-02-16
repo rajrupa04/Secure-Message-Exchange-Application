@@ -70,7 +70,9 @@ public class SecureMsgApp {
 
     private void displayHubMenu() {
         System.out.println("You can carry out the following tasks:");
-        System.out.println("1. Add a new note\n2. Add a new reminder\n3. Add an existing user to your contact list");
+        System.out.println("1. Add a new note\n2. Add a new reminder\n3. Add an existing user to your emergency "
+                +
+                "contact list");
         System.out.println("4. Send a message to an existing user\n5. quit");
         System.out.println("Choose an action (1-5):");
         Integer choice = input.nextInt();
@@ -99,9 +101,9 @@ public class SecureMsgApp {
                 try {
                     interpretChoiceFour();
                 } catch (NoSuchPaddingException e) {
-                    throw new RuntimeException(e);
+                    System.err.println("Unexpected NoSuchPaddingException!");
                 } catch (NoSuchAlgorithmException e) {
-                    throw new RuntimeException(e);
+                    System.err.println("Unexpected NoSuchAlgorithmException!");
                 }
                 hubOrQuit();
             case 5:
@@ -124,15 +126,15 @@ public class SecureMsgApp {
         String msgContents = input.next();
         Integer messageID = 0;
         try {
-            messageID = user.getHub().sendMessage(sender,recipient,msgContents,msgUrgency);
+            messageID = sender.getHub().sendMessage(sender,recipient,msgContents,msgUrgency);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            System.err.println("Unexpected UnsupportedEncodingException!");
         } catch (IllegalBlockSizeException e) {
-            throw new RuntimeException(e);
+            System.err.println("Unexpected IllegalBlockSizeException!");
         } catch (BadPaddingException e) {
-            throw new RuntimeException(e);
+            System.err.println("Unexpected BadPaddingException!");
         } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
+            System.err.println("Unexpected InvalidKeyException!");
         }
 
         System.out.println("Message sent! The message ID is: " + messageID);
@@ -143,22 +145,24 @@ public class SecureMsgApp {
         switch (ul) {
             case 1: u = UrgencyLevel.REGULAR;
 
+
             case 2: u = UrgencyLevel.URGENT;
 
             case 3: u = UrgencyLevel.EMERGENCY;
 
             default:
                 System.out.println("Sorry, that's an invalid entry.");
-                break;
+                u = null;
+
 
         }
         return u;
     }
 
     private void interpretChoiceThree() {
-        System.out.println("You have chosen to add an existing user to your contact list.");
+        System.out.println("You have chosen to add an existing user to your emergency contact list.");
         ArrayList<User> contactList = user.getHub().getContactList();
-        System.out.println("Enter the user ID of the user you would like to add to your contact list:");
+        System.out.println("Enter the user ID of the user you would like to add to your emergency contact list:");
         Integer id = input.nextInt();
         User userToAdd = userMap.getUser(id);
         contactList.add(userToAdd);
@@ -228,21 +232,23 @@ public class SecureMsgApp {
             String decryptedMsg = userHub.receiveMessage(user,i);
             System.out.println(decryptedMsg);
         } catch (NoSuchPaddingException e) {
-            throw new RuntimeException(e);
+            System.err.println("Unexpected NoSuchPaddingException");
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            System.err.println("Unexpected NoSuchAlgorithmException");
         }
 
 
     }
 
     private void displayHubContacts(Hub userHub) {
-        System.out.println("Fetching your contact list...");
+        System.out.println("Fetching your emergency contact list...");
         ArrayList<User> userContacts = userHub.getContactList();
         if (userContacts.isEmpty()) {
             System.out.println("You do not have any saved contacts.");
         } else {
-            System.out.println(userContacts);
+            for (User u : userContacts) {
+                System.out.println("UserID: " + u.getUserID() + " UserName: " + u.getUsername());
+            }
         }
     }
 

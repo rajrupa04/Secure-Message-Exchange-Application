@@ -27,11 +27,12 @@ I believe that I can create a compelling application that can address real-world
 
 ## User stories:
 - As a user, I want to be able to send an **arbitrary** number of **encrypted** messages to another user who has an account.
-- As a user, I want to be able to be able to **view** my personalised hub, and **add/delete** information from it as required.
-- As a user, I want to be able to decide how **urgent** a message is, and the system should **prioritize** it accordingly.
+- As a user, I want to be able to be able to **view** my personalised hub when I log in.
+- As a user, I should be able to **add/modify** information in my hub (eg: notes, reminders, etc.)
+- As a user, I want to be able to decide how **urgent** a message is, when I send a message.
 - As a user, I want to be able to set **emergency** contacts, and the system should be able to alert them with 
 urgent messages if needed.
 - As a user, I want to be able to add a **new message** and specify the **recipient** and **urgency** for each message.
-- As a user, I want to be able to set a **private key** and encrypt the message before sending.
+- As a user, I want each of my messages to have a **shared key** accessible to only the sender and recipient. 
 - As a user, I want to be able to **organize** my messages into folders. 
 - As a user, I want to be able to **view** how many **unread** messages I have, and how urgent they are.

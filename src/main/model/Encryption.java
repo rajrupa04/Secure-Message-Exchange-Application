@@ -16,11 +16,17 @@ public class Encryption {
     private static boolean encryptionStatus;
     private Cipher cipher;
 
+    //REQUIRES: none
+    //MODIFIES: this
+    //EFFECTS: constructs an encryption object, initialising the encryption status and the cipher object
     public Encryption() throws NoSuchPaddingException, NoSuchAlgorithmException {
         this.encryptionStatus = false;
         this.cipher = Cipher.getInstance("DES");
     }
 
+    //REQUIRES: none
+    //MODIFIES: this
+    //EFFECTS: encrypts a provided message using a private key, returns the Base-64 encoded encrypted text
     public String encryptMessage(String message, SecretKey privateKey) throws NoSuchPaddingException,
             NoSuchAlgorithmException, UnsupportedEncodingException, IllegalBlockSizeException,
             BadPaddingException, InvalidKeyException {
@@ -30,10 +36,8 @@ public class Encryption {
         cipher.init(Cipher.ENCRYPT_MODE,privateKey);
         byte[] encryptedText = cipher.doFinal(byteString);
         try {
-
             encryptedMessage = new String(encryptedText);
             this.encryptionStatus = true;
-            return encryptedMessage;
 
         } finally {
             return Base64.getEncoder().encodeToString(encryptedText);
@@ -42,7 +46,9 @@ public class Encryption {
 
     }
 
-
+    //REQUIRES: The string to be decrypted must be encrypted properly
+    //MODIFIES: this
+    //EFFECTS: decrypts the provided message using the private key
     public String decryptMessage(String encryptedMessage, SecretKey privateKey) {
 
         String decryptedMessage = "";

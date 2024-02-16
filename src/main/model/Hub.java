@@ -21,6 +21,9 @@ public class Hub {
     private MessageFolder messageFolder;
     private Notification notifications;
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: constructs a new hub with notes, reminders, contact lists, a message folder and notifications
     public Hub() {
         this.note = new Note();
         this.reminder = new Reminder();
@@ -29,26 +32,44 @@ public class Hub {
         this.notifications = new Notification();
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: returns the notes the user may have saved in their hub
     public Note getNote() {
         return this.note;
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: returns the reminders the user may have saved in their hub
     public Reminder getReminder() {
         return this.reminder;
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: returns the user's list of emergency contacts
     public ArrayList getContactList() {
         return this.contactList;
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: returns the user's notifications
     public Notification getNotifications() {
         return this.notifications;
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: returns the user's message folder
     public MessageFolder getMessageFolder() {
         return this.messageFolder;
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: sends an encrypted message to the recipient
     public Integer sendMessage(User sender, User recipient, String messageContent, UrgencyLevel urgency)
             throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException,
             IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
@@ -64,6 +85,9 @@ public class Hub {
 
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: returns the decrypted message from a recipient's message folder
     public String receiveMessage(User recipient, Integer messageID) throws
             NoSuchPaddingException, NoSuchAlgorithmException {
         Message receivedMessage = recipient.getHub().getMessageFolder().getMessageByID(messageID);
