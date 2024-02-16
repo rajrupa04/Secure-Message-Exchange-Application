@@ -51,4 +51,14 @@ public class NotificationTest {
         assertTrue(notif.getHashMapOfNotifications().isEmpty());
 
     }
+
+    @Test
+    public void updateNotificationTest() {
+        notif.addNotification(UrgencyLevel.REGULAR,"regular notification 1");
+        notif.updateNotification(UrgencyLevel.REGULAR,"new regular notification 1");
+        assertEquals("new regular notification 1",notif.getNotification(UrgencyLevel.REGULAR));
+        notif.updateNotification(UrgencyLevel.URGENT,"urgent notification 1");
+        assertFalse(notif.getHashMapOfNotifications().containsKey(UrgencyLevel.URGENT));
+
+    }
 }

@@ -8,10 +8,12 @@ import org.junit.jupiter.api.Test;
 import javax.crypto.*;
 import javax.crypto.NoSuchPaddingException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,6 +43,8 @@ class EncryptionTest {
             String encryptedMessage = eTest.encryptMessage(message, privateKey);
 
             assertFalse(encryptedMessage.equals(null));
+            assertTrue(Base64.getDecoder().decode(encryptedMessage).length > 0);
+            assertEquals(message, eTest.decryptMessage(encryptedMessage, privateKey));
         } catch (NoSuchAlgorithmException e) {
             fail("Unexpected NoSuchAlgorithmException");
         } catch (NoSuchPaddingException e) {
@@ -70,10 +74,19 @@ class EncryptionTest {
             fail("Unexpected NoSuchAlgorithmException");
         } catch (NoSuchPaddingException e) {
             fail("Unexpected NoSuchPaddingException");
-        } catch (UnsupportedEncodingException | IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
+        } catch (UnsupportedEncodingException e) {
             fail("Unexpected UnsupportedEncodingException");
+        } catch (IllegalBlockSizeException e) {
+            fail("Unexpected IllegalBlockSizeException");
+        } catch (BadPaddingException e) {
+            fail("Unexpected BadPaddingException");
+        } catch (InvalidKeyException e) {
+            fail("Unexpected InvalidKeyException");
         }
 
 
     }
+
+
+
 }

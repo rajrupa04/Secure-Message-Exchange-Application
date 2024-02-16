@@ -42,6 +42,7 @@ public class Encryption {
 
     }
 
+
     public String decryptMessage(String encryptedMessage, SecretKey privateKey) {
 
         String decryptedMessage = "";
@@ -52,12 +53,6 @@ public class Encryption {
             decryptedMessage = new String(decryptedBytes,StandardCharsets.UTF_8);
             this.encryptionStatus = false;
 
-        } catch (InvalidKeyException e) {
-            System.err.println("Invalid Key while Decryption!");
-        } catch (IllegalBlockSizeException e) {
-            System.err.println("Illegal Block Size!");
-        } catch (BadPaddingException e) {
-            System.err.println("Bad Padding!");
         } finally {
             return decryptedMessage;
         }

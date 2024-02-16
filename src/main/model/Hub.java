@@ -69,7 +69,8 @@ public class Hub {
         Message receivedMessage = recipient.getHub().getMessageFolder().getMessageByID(messageID);
         String messageToDecrypt = receivedMessage.getEncryptedMessageText();
         Encryption e = new Encryption();
-        String decryptedMessage = e.decryptMessage(messageToDecrypt, receivedMessage.getSharedKey());
+        String decryptedMessage = null;
+        decryptedMessage = e.decryptMessage(messageToDecrypt, receivedMessage.getSharedKey());
         return decryptedMessage;
     }
 

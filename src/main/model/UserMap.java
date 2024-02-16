@@ -26,4 +26,8 @@ public class UserMap {
         return userMap.containsKey(userID);
 
     }
+
+    public HashMap<Integer, User> getUserMap() {
+        return userMap;
+    }
 }
