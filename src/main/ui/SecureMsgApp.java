@@ -144,16 +144,20 @@ public class SecureMsgApp {
         UrgencyLevel u = null;
         switch (ul) {
             case 1: u = UrgencyLevel.REGULAR;
-
+                    System.out.println("You chose the urgency level REGULAR.");
+                    break;
 
             case 2: u = UrgencyLevel.URGENT;
+                    System.out.println("You chose the urgency level URGENT.");
+                    break;
 
             case 3: u = UrgencyLevel.EMERGENCY;
+                    System.out.println("You chose the urgency level EMERGENCY.");
+                    break;
 
             default:
                 System.out.println("Sorry, that's an invalid entry.");
-                u = null;
-
+                break;
 
         }
         return u;
@@ -221,9 +225,7 @@ public class SecureMsgApp {
         if (userMsgFolder.getMessageFolder().isEmpty()) {
             System.out.println("You do not have any messages in your folder yet.");
         } else {
-            System.out.println("Enter the message ID of the message you would like to access.");
-            Integer i = input.nextInt();
-            displayMessage(userHub, i);
+            System.out.println("You have " + userMsgFolder.getMessageFolder().size() + " new messages!");
         }
     }
 
