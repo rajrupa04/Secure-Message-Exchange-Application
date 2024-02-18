@@ -23,12 +23,18 @@ public class SecureMsgApp {
     private User user;
     private Scanner input;
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: constructs a new SecureMsgApp object
     public SecureMsgApp() {
         userMap = new UserMap();
         user = new User();
         runSecureMsgApp();
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: runs the application, handles the user log in
     private void runSecureMsgApp() {
         boolean keepGoing = true;
         input = new Scanner(System.in);
@@ -52,6 +58,9 @@ public class SecureMsgApp {
 
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: asks the user if they would like to view their hub or quit the application
     private void hubOrQuit() {
         System.out.println("Would you like to continue to your hub or quit? (enter any key to continue, q to quit)");
         String ans = input.next();
@@ -68,6 +77,9 @@ public class SecureMsgApp {
     }
 
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: displays all the tasks the user can carry out in the hub
     private void displayHubMenu() {
         System.out.println("You can carry out the following tasks:");
         System.out.println("1. Add a new note\n2. Add a new reminder\n3. Add an existing user to your emergency "
@@ -81,6 +93,9 @@ public class SecureMsgApp {
 
 
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: interprets the user's choice based on which action he would like to carry out
     private void interpretChoice(Integer choice) {
         switch (choice) {
             case 1:
@@ -113,6 +128,10 @@ public class SecureMsgApp {
         }
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: sends an encrypted message of a certain urgency level and content to the specified recipient
+
     private void interpretChoiceFour() throws NoSuchPaddingException, NoSuchAlgorithmException {
         System.out.println("You have chosen to send a message to an existing user.");
         User sender = this.user;
@@ -140,6 +159,9 @@ public class SecureMsgApp {
         System.out.println("Message sent! The message ID is: " + messageID);
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: returns the urgency level corresponding to the user inputted integer
     private UrgencyLevel chooseUrgency(Integer ul) {
         UrgencyLevel u = null;
         switch (ul) {
@@ -163,6 +185,9 @@ public class SecureMsgApp {
         return u;
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: adds a user to the user's emergency contact list
     private void interpretChoiceThree() {
         System.out.println("You have chosen to add an existing user to your emergency contact list.");
         ArrayList<User> contactList = user.getHub().getContactList();
@@ -173,6 +198,8 @@ public class SecureMsgApp {
         System.out.println("Added!");
     }
 
+
+    //EFFECTS: adds a new note with a note ID to the user's notes
     private void interpretChoiceOne() {
         System.out.println("You have chosen to add a new note.");
         Note userNotes = user.getHub().getNote();
@@ -185,6 +212,9 @@ public class SecureMsgApp {
 
     }
 
+    //REQUIRES:
+    //MODIFIES:
+    //EFFECTS: adds a new reminder with a date to the user's reminders
     private void interpretChoiceTwo() {
         System.out.println("You have chosen to add a new reminder.");
         Reminder r = user.getHub().getReminder();
@@ -196,6 +226,9 @@ public class SecureMsgApp {
         System.out.println("Reminder added!");
     }
 
+    //REQUIRES:
+    //MODIFIES:
+    //EFFECTS: displays all the parts of the user's hub - notes, reminders, contacts, message folder and notifications
     private void displayHub(Hub userHub) {
         displayHubNotes(userHub);
         displayHubReminders(userHub);
@@ -204,6 +237,9 @@ public class SecureMsgApp {
         displayHubNotifications(userHub);
     }
 
+    //REQUIRES:
+    //MODIFIES:
+    //EFFECTS: displays the user's notifications, printing a message if there are none
     private void displayHubNotifications(Hub userHub) {
         System.out.println("Checking notifications...");
         HashMap userNotif = userHub.getNotifications().getHashMapOfNotifications();
@@ -214,11 +250,17 @@ public class SecureMsgApp {
         }
     }
 
+    //REQUIRES:
+    //MODIFIES:
+    //EFFECTS: displays the hashmap containing the notifications
     private void displayNotifications(HashMap h) {
         System.out.println("Notifications:");
         System.out.println(h);
     }
 
+    //REQUIRES:
+    //MODIFIES:
+    //EFFECTS: displays the user's message folder, printing a message if there are no messages
     private void displayHubMessageFolder(Hub userHub) {
         System.out.println("Fetching your message folder...");
         MessageFolder userMsgFolder = userHub.getMessageFolder();
@@ -229,6 +271,9 @@ public class SecureMsgApp {
         }
     }
 
+    //REQUIRES:
+    //MODIFIES:
+    //EFFECTS: displays the message corresponding to the message ID.
     private void displayMessage(Hub userHub, Integer i) {
         try {
             String decryptedMsg = userHub.receiveMessage(user,i);
@@ -242,6 +287,9 @@ public class SecureMsgApp {
 
     }
 
+    //REQUIRES:
+    //MODIFIES:
+    //EFFECTS: displays the user's emergency contact list, printing a special message if they don't have any
     private void displayHubContacts(Hub userHub) {
         System.out.println("Fetching your emergency contact list...");
         ArrayList<User> userContacts = userHub.getContactList();
@@ -254,6 +302,9 @@ public class SecureMsgApp {
         }
     }
 
+    //REQUIRES:
+    //MODIFIES:
+    //EFFECTS: displays the user's reminders, printing a special message if they don't have any
     private void displayHubReminders(Hub userHub) {
         System.out.println("Fetching reminders...");
         Reminder userReminders = userHub.getReminder();
@@ -265,6 +316,9 @@ public class SecureMsgApp {
     }
 
 
+    //REQUIRES:
+    //MODIFIES:
+    //EFFECTS: displays the user's notes, printing a special message if they don't have any
     private void displayHubNotes(Hub userHub) {
         System.out.println("Welcome to your personalized Hub!");
         System.out.println("Fetching notes...");
@@ -278,6 +332,9 @@ public class SecureMsgApp {
 
     }
 
+    //REQUIRES:
+    //MODIFIES:
+    //EFFECTS: displays the login page for the user who already has an existing account
     private void displayLoginPageForExistingUser() {
         System.out.println("Welcome back. Please enter your username.");
         String username = input.next();
@@ -294,6 +351,9 @@ public class SecureMsgApp {
         }
     }
 
+    //REQUIRES:
+    //MODIFIES:
+    //EFFECTS: displays the login page for a new user without an existing account
     private void displayLoginPageForNewUser() {
         System.out.println("Hello, new User!");
         System.out.println("What should we call you?");

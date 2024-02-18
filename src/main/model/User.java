@@ -18,6 +18,9 @@ public class User {
     private Integer minimumLimitForUserID = 10000000;
     private Integer maximumLimitForUserID = 99999999;
 
+    //REQUIRES: none
+    //MODIFIES: this
+    //EFFECTS: constructs a new User with a username, password, user ID and personal hub
     public void createNewUser(String username, String password) {
 
         this.username = username;
@@ -28,24 +31,39 @@ public class User {
 
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: validates a user's credentials while logging in, checks if the userID, username and password match.
     public boolean userLogIn(Integer userID, String username, String password) {
         return this.userID.equals(userID)
                 && this.username.equals(username)
                 && this.password.equals(password);
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: returns the user ID of the current user
     public Integer getUserID() {
         return this.userID;
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: returns the username of the current user
     public String getUsername() {
         return this.username;
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: returns the password of the currenrt user
     public String getPassword() {
         return this.password;
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: generates a random user ID within the specified limits
     public Integer generateID() {
         int generatedID = (int)Math.floor(minimumLimitForUserID
                 + ((maximumLimitForUserID - minimumLimitForUserID + 1) * Math.random()));
@@ -53,6 +71,9 @@ public class User {
         return generatedID;
     }
 
+    //REQUIRES: none
+    //MODIFIES: none
+    //EFFECTS: returns the user's personal hub
     public Hub getHub() {
         return this.hub;
     }
