@@ -41,4 +41,24 @@ public class UserTest {
         assertFalse(user1.userLogIn(uid,"",pwd));
         assertFalse(user1.userLogIn(uid,un, ""));
     }
+
+    @Test
+    public void createNewUserTest() {
+        User userNew = new User();
+        userNew.createNewUser("newUser","12345");
+        assertEquals("newUser",userNew.getUsername());
+        assertEquals("12345",userNew.getPassword());
+        assertNotNull(userNew.getHub());
+        assertNotNull(userNew.getUserID());
+    }
+
+    @Test
+    public void generateIDTest() {
+        assertTrue((user1.generateID() >= 10000000) && (user1.generateID() <= 99999999));
+    }
+
+    @Test
+    public void getHubTest() {
+        assertNotNull(user1.getHub());
+    }
 }

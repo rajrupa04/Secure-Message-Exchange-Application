@@ -76,5 +76,13 @@ public class ReminderTest {
         assertEquals(r.getAllReminders().size(),2);
     }
 
+    @Test
+    public void clearAllRemindersTest() {
+        r.addNewReminder(LocalDate.of(2024, 10, 15),"reminder1");
+        r.addNewReminder(LocalDate.of(2024, 11, 16),"reminder2");
+        r.clearAllReminders();
+        assertEquals(0,r.numberOfReminders());
+    }
+
 
 }

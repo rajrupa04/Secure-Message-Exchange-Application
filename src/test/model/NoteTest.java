@@ -46,4 +46,34 @@ public class NoteTest {
         assertEquals(n.getNumberOfNotes(),0);
 
     }
+
+    @Test
+    public void getListOfNotesTest() {
+        n.addNote(1,"note 1");
+        n.addNote(2,"note 2");
+        HashMap<Integer, String> ntest = new HashMap<>();
+        ntest.put(1,"note 1");
+        ntest.put(2,"note 2");
+        assertEquals(ntest,n.getListOfNotes());
+    }
+
+    @Test
+    public void removeNoteTest() {
+        n.addNote(1,"note 1");
+        n.addNote(2,"note 2");
+        assertEquals(n.getNumberOfNotes(),2);
+        n.removeNote(1);
+        assertEquals(n.getNumberOfNotes(),1);
+        assertEquals(n.retrieveNote(1),"Note not found!");
+    }
+
+    @Test
+    public void retrieveNoteTest() {
+        n.addNote(1,"note 1");
+        n.addNote(2,"note 2");
+        assertEquals("note 1",n.retrieveNote(1));
+        assertEquals("note 2",n.retrieveNote(2));
+        assertEquals("Note not found!",n.retrieveNote(3));
+
+    }
 }

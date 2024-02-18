@@ -16,15 +16,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-
+//This class contains all the methods handling user interactions and input.
 
 public class SecureMsgApp {
     private UserMap userMap;
     private User user;
     private Scanner input;
 
-    //REQUIRES: none
-    //MODIFIES: none
+
     //EFFECTS: constructs a new SecureMsgApp object
     public SecureMsgApp() {
         userMap = new UserMap();
@@ -32,8 +31,6 @@ public class SecureMsgApp {
         runSecureMsgApp();
     }
 
-    //REQUIRES: none
-    //MODIFIES: none
     //EFFECTS: runs the application, handles the user log in
     private void runSecureMsgApp() {
         boolean keepGoing = true;
@@ -58,8 +55,43 @@ public class SecureMsgApp {
 
     }
 
-    //REQUIRES: none
-    //MODIFIES: none
+    //EFFECTS: displays the login page for a user who already has an existing account
+    private void displayLoginPageForExistingUser() {
+        System.out.println("Welcome back. Please enter your username.");
+        String username = input.next();
+        System.out.println("Now please enter your password.");
+        String password = input.next();
+        System.out.println("Please enter your unique user ID.");
+        Integer id = input.nextInt();
+        User userFromUserMap = userMap.getUser(id);
+        Boolean successfulLogin = userFromUserMap.userLogIn(id, username, password);
+        if (successfulLogin) {
+            System.out.println("Login successful! Welcome.");
+        } else {
+            System.out.println("Invalid Credentials. Please try again!");
+        }
+    }
+
+    //EFFECTS: displays the login page for a new user without an existing account
+    private void displayLoginPageForNewUser() {
+        System.out.println("Hello, new User!");
+        System.out.println("What should we call you?");
+        String nameOfUser = input.next();
+        System.out.println("Hello, " + nameOfUser + ". Go ahead and set your username.");
+        String username = input.next();
+        System.out.println("Go ahead and set your password.");
+        String password = input.next();
+        user.createNewUser(username, password);
+        Integer userID = user.getUserID();
+        System.out.println("Account successfully created! Welcome, "
+                + nameOfUser + ". Your unique user ID is: " + userID);
+        userMap.addUser(userID, user);
+    }
+
+
+
+
+
     //EFFECTS: asks the user if they would like to view their hub or quit the application
     private void hubOrQuit() {
         System.out.println("Would you like to continue to your hub or quit? (enter any key to continue, q to quit)");
@@ -77,8 +109,6 @@ public class SecureMsgApp {
     }
 
 
-    //REQUIRES: none
-    //MODIFIES: none
     //EFFECTS: displays all the tasks the user can carry out in the hub
     private void displayHubMenu() {
         System.out.println("You can carry out the following tasks:");
@@ -92,9 +122,6 @@ public class SecureMsgApp {
     }
 
 
-
-    //REQUIRES: none
-    //MODIFIES: none
     //EFFECTS: interprets the user's choice based on which action he would like to carry out
     private void interpretChoice(Integer choice) {
         switch (choice) {
@@ -128,8 +155,7 @@ public class SecureMsgApp {
         }
     }
 
-    //REQUIRES: none
-    //MODIFIES: none
+
     //EFFECTS: sends an encrypted message of a certain urgency level and content to the specified recipient
 
     private void interpretChoiceFour() throws NoSuchPaddingException, NoSuchAlgorithmException {
@@ -145,7 +171,7 @@ public class SecureMsgApp {
         String msgContents = input.next();
         Integer messageID = 0;
         try {
-            messageID = sender.getHub().sendMessage(sender,recipient,msgContents,msgUrgency);
+            messageID = sender.getHub().sendMessage(sender, recipient, msgContents, msgUrgency);
         } catch (UnsupportedEncodingException e) {
             System.err.println("Unexpected UnsupportedEncodingException!");
         } catch (IllegalBlockSizeException e) {
@@ -159,23 +185,25 @@ public class SecureMsgApp {
         System.out.println("Message sent! The message ID is: " + messageID);
     }
 
-    //REQUIRES: none
-    //MODIFIES: none
+
     //EFFECTS: returns the urgency level corresponding to the user inputted integer
     private UrgencyLevel chooseUrgency(Integer ul) {
         UrgencyLevel u = null;
         switch (ul) {
-            case 1: u = UrgencyLevel.REGULAR;
-                    System.out.println("You chose the urgency level REGULAR.");
-                    break;
+            case 1:
+                u = UrgencyLevel.REGULAR;
+                System.out.println("You chose the urgency level REGULAR.");
+                break;
 
-            case 2: u = UrgencyLevel.URGENT;
-                    System.out.println("You chose the urgency level URGENT.");
-                    break;
+            case 2:
+                u = UrgencyLevel.URGENT;
+                System.out.println("You chose the urgency level URGENT.");
+                break;
 
-            case 3: u = UrgencyLevel.EMERGENCY;
-                    System.out.println("You chose the urgency level EMERGENCY.");
-                    break;
+            case 3:
+                u = UrgencyLevel.EMERGENCY;
+                System.out.println("You chose the urgency level EMERGENCY.");
+                break;
 
             default:
                 System.out.println("Sorry, that's an invalid entry.");
@@ -185,8 +213,7 @@ public class SecureMsgApp {
         return u;
     }
 
-    //REQUIRES: none
-    //MODIFIES: none
+
     //EFFECTS: adds a user to the user's emergency contact list
     private void interpretChoiceThree() {
         System.out.println("You have chosen to add an existing user to your emergency contact list.");
@@ -207,13 +234,12 @@ public class SecureMsgApp {
         Integer noteID = input.nextInt();
         System.out.println("Enter the contents of your note: ");
         String noteText = input.next();
-        userNotes.addNote(noteID,noteText);
+        userNotes.addNote(noteID, noteText);
         System.out.println("Note added!");
 
     }
 
-    //REQUIRES:
-    //MODIFIES:
+
     //EFFECTS: adds a new reminder with a date to the user's reminders
     private void interpretChoiceTwo() {
         System.out.println("You have chosen to add a new reminder.");
@@ -222,12 +248,11 @@ public class SecureMsgApp {
         String date = input.next();
         System.out.println("Enter the contents of your reminder: ");
         String rtext = input.next();
-        r.addNewReminder(LocalDate.parse(date),rtext);
+        r.addNewReminder(LocalDate.parse(date), rtext);
         System.out.println("Reminder added!");
     }
 
-    //REQUIRES:
-    //MODIFIES:
+
     //EFFECTS: displays all the parts of the user's hub - notes, reminders, contacts, message folder and notifications
     private void displayHub(Hub userHub) {
         displayHubNotes(userHub);
@@ -237,8 +262,7 @@ public class SecureMsgApp {
         displayHubNotifications(userHub);
     }
 
-    //REQUIRES:
-    //MODIFIES:
+
     //EFFECTS: displays the user's notifications, printing a message if there are none
     private void displayHubNotifications(Hub userHub) {
         System.out.println("Checking notifications...");
@@ -250,16 +274,13 @@ public class SecureMsgApp {
         }
     }
 
-    //REQUIRES:
-    //MODIFIES:
     //EFFECTS: displays the hashmap containing the notifications
     private void displayNotifications(HashMap h) {
         System.out.println("Notifications:");
         System.out.println(h);
     }
 
-    //REQUIRES:
-    //MODIFIES:
+
     //EFFECTS: displays the user's message folder, printing a message if there are no messages
     private void displayHubMessageFolder(Hub userHub) {
         System.out.println("Fetching your message folder...");
@@ -271,12 +292,11 @@ public class SecureMsgApp {
         }
     }
 
-    //REQUIRES:
-    //MODIFIES:
+
     //EFFECTS: displays the message corresponding to the message ID.
     private void displayMessage(Hub userHub, Integer i) {
         try {
-            String decryptedMsg = userHub.receiveMessage(user,i);
+            String decryptedMsg = userHub.receiveMessage(user, i);
             System.out.println(decryptedMsg);
         } catch (NoSuchPaddingException e) {
             System.err.println("Unexpected NoSuchPaddingException");
@@ -287,8 +307,7 @@ public class SecureMsgApp {
 
     }
 
-    //REQUIRES:
-    //MODIFIES:
+
     //EFFECTS: displays the user's emergency contact list, printing a special message if they don't have any
     private void displayHubContacts(Hub userHub) {
         System.out.println("Fetching your emergency contact list...");
@@ -302,8 +321,6 @@ public class SecureMsgApp {
         }
     }
 
-    //REQUIRES:
-    //MODIFIES:
     //EFFECTS: displays the user's reminders, printing a special message if they don't have any
     private void displayHubReminders(Hub userHub) {
         System.out.println("Fetching reminders...");
@@ -311,13 +328,17 @@ public class SecureMsgApp {
         if (userReminders.getAllReminders().isEmpty()) {
             System.out.println("You do not have any saved reminders.");
         } else {
-            System.out.println(userReminders.getAllReminders());
+            for (HashMap.Entry<LocalDate, String> e : userReminders.getAllReminders().entrySet()) {
+                LocalDate k = e.getKey();
+                String v = e.getValue();
+                System.out.println("Date: " + k + " Reminder message: " + v);
+
+            }
+
         }
     }
 
 
-    //REQUIRES:
-    //MODIFIES:
     //EFFECTS: displays the user's notes, printing a special message if they don't have any
     private void displayHubNotes(Hub userHub) {
         System.out.println("Welcome to your personalized Hub!");
@@ -326,49 +347,20 @@ public class SecureMsgApp {
         if (userNotes.getListOfNotes().isEmpty()) {
             System.out.println("You do not have any saved notes.");
         } else {
-            System.out.println(userNotes.getListOfNotes());
+            for (HashMap.Entry<Integer, String> e : userNotes.getListOfNotes().entrySet()) {
+                Integer k = e.getKey();
+                String v = e.getValue();
+                System.out.println("Note ID: " + k + " Note contents: " + v);
+
+            }
 
         }
-
     }
-
-    //REQUIRES:
-    //MODIFIES:
-    //EFFECTS: displays the login page for the user who already has an existing account
-    private void displayLoginPageForExistingUser() {
-        System.out.println("Welcome back. Please enter your username.");
-        String username = input.next();
-        System.out.println("Now please enter your password.");
-        String password = input.next();
-        System.out.println("Please enter your unique user ID.");
-        Integer id = input.nextInt();
-        User userFromUserMap = userMap.getUser(id);
-        Boolean successfulLogin = userFromUserMap.userLogIn(id,username,password);
-        if (successfulLogin) {
-            System.out.println("Login successful! Welcome.");
-        } else {
-            System.out.println("Invalid Credentials. Please try again!");
-        }
-    }
-
-    //REQUIRES:
-    //MODIFIES:
-    //EFFECTS: displays the login page for a new user without an existing account
-    private void displayLoginPageForNewUser() {
-        System.out.println("Hello, new User!");
-        System.out.println("What should we call you?");
-        String nameOfUser = input.next();
-        System.out.println("Hello, " + nameOfUser + ". Go ahead and set your username.");
-        String username = input.next();
-        System.out.println("Go ahead and set your password.");
-        String password = input.next();
-        user.createNewUser(username,password);
-        Integer userID = user.getUserID();
-        System.out.println("Account successfully created! Welcome, "
-                + nameOfUser + ". Your unique user ID is: " + userID);
-        userMap.addUser(userID,user);
-
-
-    }
-
 }
+
+
+
+
+
+
+

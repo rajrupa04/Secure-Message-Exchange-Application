@@ -3,6 +3,8 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NotificationTest {
@@ -60,5 +62,24 @@ public class NotificationTest {
         notif.updateNotification(UrgencyLevel.URGENT,"urgent notification 1");
         assertFalse(notif.getHashMapOfNotifications().containsKey(UrgencyLevel.URGENT));
 
+    }
+
+    @Test
+    public void getNotificationTest() {
+        notif.addNotification(UrgencyLevel.REGULAR,"regular notification 1");
+        notif.addNotification(UrgencyLevel.URGENT,"urgent notification 1");
+        assertEquals(notif.getNotification(UrgencyLevel.REGULAR),"regular notification 1");
+        assertEquals(notif.getNotification(UrgencyLevel.URGENT),"urgent notification 1");
+        assertEquals(notif.getNotification(UrgencyLevel.EMERGENCY),null);
+    }
+
+    @Test
+    public void getHashMapOfNotificationsTest() {
+        HashMap<UrgencyLevel,String> nHashMap = new HashMap<>();
+        notif.addNotification(UrgencyLevel.REGULAR,"regular notification 1");
+        notif.addNotification(UrgencyLevel.URGENT,"urgent notification 1");
+        nHashMap.put(UrgencyLevel.REGULAR,"regular notification 1");
+        nHashMap.put(UrgencyLevel.URGENT,"urgent notification 1");
+        assertEquals(notif.getHashMapOfNotifications(),nHashMap);
     }
 }

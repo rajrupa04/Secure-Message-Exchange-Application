@@ -61,4 +61,38 @@ public class MessageFolderTest {
         assertTrue(messageFolder.isEmpty());
     }
 
+    @Test
+    public void getMessageByIdTest() {
+        Message newmsg = null;
+        try {
+            newmsg = new Message(user,recipient,"test!!", UrgencyLevel.REGULAR);
+            f.addNewMessage(newmsg.getMessageID(), newmsg);
+            assertTrue(f.containsMessage(newmsg.getMessageID()));
+            assertEquals(f.getMessageByID(newmsg.getMessageID()), newmsg);
+        } catch (NoSuchAlgorithmException e) {
+            fail("Unexpected NoSuchAlgorithmException");
+        } catch (NoSuchPaddingException e) {
+            fail("Unexpected NoSuchPaddingException");
+        }
+
+    }
+
+    @Test
+    public void getMessageFolderTest() {
+        Message newmsg = null;
+        try {
+            newmsg = new Message(user,recipient,"test!!", UrgencyLevel.REGULAR);
+            HashMap<Integer,Message> messageHashMap = new HashMap<>();
+            f.addNewMessage(newmsg.getMessageID(), newmsg);
+            messageHashMap.put(newmsg.getMessageID(),newmsg);
+            assertEquals(f.getMessageFolder(),messageHashMap);
+        } catch (NoSuchAlgorithmException e) {
+            fail("Unexpected NoSuchAlgorithmException");
+        } catch (NoSuchPaddingException e) {
+            fail("Unexpected NoSuchPaddingException");
+        }
+
+    }
+
+
 }
