@@ -115,8 +115,8 @@ public class SecureMsgApp {
         System.out.println("1. Add a new note\n2. Add a new reminder\n3. Add an existing user to your emergency "
                 +
                 "contact list");
-        System.out.println("4. Send a message to an existing user\n5. quit");
-        System.out.println("Choose an action (1-5):");
+        System.out.println("4. Send a message to an existing user\n5. Log out\n6. Quit");
+        System.out.println("Choose an action (1-6):");
         Integer choice = input.nextInt();
         interpretChoice(choice);
     }
@@ -127,17 +127,14 @@ public class SecureMsgApp {
         switch (choice) {
             case 1:
                 interpretChoiceOne();
-                hubOrQuit();
 
 
             case 2:
                 interpretChoiceTwo();
-                hubOrQuit();
 
 
             case 3:
                 interpretChoiceThree();
-                hubOrQuit();
 
             case 4:
                 try {
@@ -148,11 +145,19 @@ public class SecureMsgApp {
                     System.err.println("Unexpected NoSuchAlgorithmException!");
                 }
                 hubOrQuit();
+
             case 5:
+                interpretChoiceFive();
+            case 6:
                 System.exit(0);
 
 
         }
+    }
+
+    private void interpretChoiceFive() {
+        System.out.println("Logging out...");
+        runSecureMsgApp();
     }
 
 
@@ -183,6 +188,7 @@ public class SecureMsgApp {
         }
 
         System.out.println("Message sent! The message ID is: " + messageID);
+
     }
 
 
@@ -223,6 +229,7 @@ public class SecureMsgApp {
         User userToAdd = userMap.getUser(id);
         contactList.add(userToAdd);
         System.out.println("Added!");
+        hubOrQuit();
     }
 
 
@@ -236,6 +243,7 @@ public class SecureMsgApp {
         String noteText = input.next();
         userNotes.addNote(noteID, noteText);
         System.out.println("Note added!");
+        hubOrQuit();
 
     }
 
@@ -250,6 +258,7 @@ public class SecureMsgApp {
         String rtext = input.next();
         r.addNewReminder(LocalDate.parse(date), rtext);
         System.out.println("Reminder added!");
+        hubOrQuit();
     }
 
 
