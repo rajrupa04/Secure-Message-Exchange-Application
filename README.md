@@ -36,3 +36,5 @@ urgent messages if needed.
 - As a user, I want each of my messages to have a **shared key** accessible to only the sender and recipient. 
 - As a user, I want to be able to **organize** my messages into folders. 
 - As a user, I want to be able to **view** how many **unread** messages I have, and how urgent they are.
+- As a user, when I select the **log-out** or **quit** option from the **hub menu**, I want to be reminded to **save** the information in my hub to file and have the **option** to do so or not.
+- As a user, I want to have the **option** to **reload** the saved hub when I start the application.
