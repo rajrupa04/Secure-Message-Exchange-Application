@@ -13,7 +13,7 @@ import java.util.Base64;
 //and recipient respectively will be occurring here.
 
 public class Encryption {
-    private static boolean encryptionStatus;
+    private boolean encryptionStatus;
     private Cipher cipher;
 
     //REQUIRES: none

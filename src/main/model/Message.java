@@ -46,6 +46,13 @@ public class Message extends Encryption {
 
     //REQUIRES: none
     //MODIFIES: this
+    //EFFECTS: sets the SharedKey field
+    public void setSharedKey(SecretKey sk) {
+        this.sharedKey = sk;
+    }
+
+    //REQUIRES: none
+    //MODIFIES: this
     //EFFECTS: sets the encryptedMessageText field
     public String getEncryptedMessageText() {
         return this.encryptedMessageText;
