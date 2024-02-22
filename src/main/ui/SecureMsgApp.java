@@ -6,14 +6,12 @@ import model.*;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 //This class contains all the methods handling user interactions and input.
@@ -223,11 +221,11 @@ public class SecureMsgApp {
     //EFFECTS: adds a user to the user's emergency contact list
     private void interpretChoiceThree() {
         System.out.println("You have chosen to add an existing user to your emergency contact list.");
-        ArrayList<User> contactList = user.getHub().getContactList();
+        ArrayList<String> contactList = user.getHub().getContactList();
         System.out.println("Enter the user ID of the user you would like to add to your emergency contact list:");
         Integer id = input.nextInt();
         User userToAdd = userMap.getUser(id);
-        contactList.add(userToAdd);
+        contactList.add(userToAdd.getUsername());
         System.out.println("Added!");
         hubOrQuit();
     }
@@ -320,12 +318,12 @@ public class SecureMsgApp {
     //EFFECTS: displays the user's emergency contact list, printing a special message if they don't have any
     private void displayHubContacts(Hub userHub) {
         System.out.println("Fetching your emergency contact list...");
-        ArrayList<User> userContacts = userHub.getContactList();
+        ArrayList<String> userContacts = userHub.getContactList();
         if (userContacts.isEmpty()) {
             System.out.println("You do not have any saved contacts.");
         } else {
-            for (User u : userContacts) {
-                System.out.println("UserID: " + u.getUserID() + " UserName: " + u.getUsername());
+            for (String u : userContacts) {
+                System.out.println("UserName: " + u);
             }
         }
     }

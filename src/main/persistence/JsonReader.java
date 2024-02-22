@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 import org.json.*;
 
@@ -30,11 +31,40 @@ public class JsonReader {
 
     // EFFECTS: parses hub from JSON object and returns it
     private Hub parseHub(JSONObject jsonObject) {
-        String name = jsonObject.getString("Hub");
+        String username = jsonObject.getString("Username");
         Hub h = new Hub();
         addNote(h, jsonObject);
         addReminder(h, jsonObject);
+        addContactList(h,jsonObject);
+        addMessageFolder(h,jsonObject);
         return h;
+    }
+
+    // MODIFIES: h
+    // EFFECTS: parses messages from JSON object and adds them to hub
+    private void addMessageFolder(Hub h, JSONObject jsonObject) {
+        JSONArray jsonArray = jsonObject.getJSONArray("MessageFolder");
+        for (Object json : jsonArray) {
+            JSONObject nextMessage = (JSONObject) json;
+            addSingleMessage(h, nextMessage);
+        }
+    }
+
+    // MODIFIES: h
+    // EFFECTS: parses a single message from JSON object and adds them to hub
+    private void addSingleMessage(Hub h, JSONObject jsonObject) {
+
+    }
+
+    // MODIFIES: h
+    // EFFECTS: parses contact list from JSON object and adds them to hub
+    private void addContactList(Hub h, JSONObject jsonObject) {
+        JSONArray jsonArray = jsonObject.getJSONArray("ContactList");
+        for (Object json : jsonArray) {
+            JSONObject nextContact = (JSONObject) json;
+            String username = nextContact.getString("Username");
+            h.getContactList().add(username);
+        }
     }
 
     // MODIFIES: h
@@ -47,7 +77,7 @@ public class JsonReader {
         }
     }
 
-    // MODIFIES: hub
+    // MODIFIES: h
     // EFFECTS: parses a single reminder from JSON object and adds it to hub
     private void addSingleReminder(Hub h, JSONObject jsonObject) {
         String reminderDate = jsonObject.getString("Date");

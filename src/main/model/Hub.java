@@ -4,8 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import model.Encryption;
-import model.Message;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -17,7 +15,7 @@ import javax.crypto.NoSuchPaddingException;
 public class Hub {
     private Note note;
     private Reminder reminder;
-    private ArrayList<User> contactList;
+    private ArrayList<String> contactList;
     private MessageFolder messageFolder;
     private Notification notifications;
 
@@ -27,7 +25,7 @@ public class Hub {
     public Hub() {
         this.note = new Note();
         this.reminder = new Reminder();
-        this.contactList = new ArrayList<User>();
+        this.contactList = new ArrayList<String>();
         this.messageFolder = new MessageFolder();
         this.notifications = new Notification();
     }
