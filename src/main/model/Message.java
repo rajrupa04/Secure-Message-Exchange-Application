@@ -4,12 +4,16 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.KeyGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+
 import model.Encryption;
+import org.json.JSONObject;
+import persistence.Writable;
 
 //This class represents a message. Each individual message will have properties like a sender, recipient,
 //individual message ID, level of urgency and whether it has been encrypted successfully or not.
 
-public class Message extends Encryption {
+public class Message extends Encryption implements Writable {
     private final User sender;
     private final User recipient;
     private final Integer messageID;
@@ -110,4 +114,22 @@ public class Message extends Encryption {
         return generatedID;
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("SenderUserID",sender.getUserID());
+        json.put("RecipientUserID",recipient.getUserID());
+        json.put("MessageID",messageID);
+        json.put("DecryptedMessageText",decryptedMessageText);
+        json.put("EncryptedMessageText",encryptedMessageText);
+        json.put("Urgency Level",urgencyLevel.toString());
+        json.put("SharedKey",secretKeyToString(sharedKey));
+        
+        return json;
+    }
+
+    private String secretKeyToString(SecretKey sharedKey) {
+        byte[] encodedKey = sharedKey.getEncoded();
+        return Base64.getEncoder().encodeToString(encodedKey);
+    }
 }

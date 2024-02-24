@@ -1,5 +1,9 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -12,7 +16,7 @@ import javax.crypto.NoSuchPaddingException;
 //information like notes, reminders, messages, contact list, and so on. Every user will be able to access their hub
 //once they log in.
 
-public class Hub {
+public class Hub implements Writable {
     private Note note;
     private Reminder reminder;
     private ArrayList<String> contactList;
@@ -98,4 +102,21 @@ public class Hub {
 
 
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("Notes", note.toJson());
+        json.put("Reminders", reminder.toJson());
+        json.put("ContactList", addContactListToJson(contactList));
+        json.put("MessageFolder", messageFolder.toJson());
+        return json;
+    }
+
+    private JSONArray addContactListToJson(ArrayList<String> c) {
+        JSONArray json = new JSONArray();
+        for (String element : c) {
+            json.put(element);
+        }
+        return json;
+    }
 }

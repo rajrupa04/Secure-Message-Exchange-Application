@@ -3,6 +3,9 @@ package model;
 
 //This class stores information about users who make an account.
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 public class UserMap {
@@ -42,5 +45,13 @@ public class UserMap {
     //EFFECTS: returns the userMap (hashMap)
     public HashMap<Integer, User> getUserMap() {
         return userMap;
+    }
+
+    public JSONObject toJson() {
+        JSONObject userMapJson = new JSONObject();
+        for (Integer userID : userMap.keySet()) {
+            userMapJson.put(userID.toString(),userMap.get(userID).addUserToJson());
+        }
+        return userMapJson;
     }
 }

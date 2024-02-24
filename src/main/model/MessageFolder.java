@@ -3,8 +3,13 @@ package model;
 //This class represents a message folder, which will be present in the hub of every user. Each user will
 //be able to see their messages at a glance in the folder.
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import model.Encryption;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
 
 
 public class MessageFolder {
@@ -43,5 +48,16 @@ public class MessageFolder {
     //EFFECTS: returns the message folder hashmap
     public HashMap<Integer, Message> getMessageFolder() {
         return this.messageFolder;
+    }
+
+
+    public JSONArray toJson() {
+        JSONArray json = new JSONArray();
+        for (Integer messageID : messageFolder.keySet()) {
+            JSONObject messageJson = new JSONObject();
+            messageJson = getMessageByID(messageID).toJson();
+            json.put(messageJson);
+        }
+        return json;
     }
 }

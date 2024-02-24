@@ -18,6 +18,8 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+// Represents a reader that reads workroom from JSON data stored in file
+
 public class JsonReader {
     private String hubSource;
     private String userSource;

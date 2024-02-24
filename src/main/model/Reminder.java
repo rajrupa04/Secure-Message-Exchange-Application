@@ -2,6 +2,11 @@ package model;
 
 //This class represents reminders which a user can store in their hub.
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.time.*;
 
@@ -65,4 +70,16 @@ public class Reminder {
     }
 
 
+
+    public JSONArray toJson() {
+        JSONArray json = new JSONArray();
+        for (LocalDate date : reminders.keySet()) {
+            JSONObject reminderJson = new JSONObject();
+            reminderJson.put("Date", date.format(DateTimeFormatter.ISO_DATE));
+            reminderJson.put("reminderContent", reminders.get(date));
+            json.put(reminderJson);
+
+        }
+        return json;
+    }
 }

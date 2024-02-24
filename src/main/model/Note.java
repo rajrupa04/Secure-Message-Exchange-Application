@@ -1,5 +1,9 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.HashMap;
 //This class represents notes which a user can store in their hub.
 
@@ -54,4 +58,15 @@ public class Note {
     }
 
 
+    public JSONArray toJson() {
+        JSONArray json = new JSONArray();
+        for (Integer noteID : listOfNotes.keySet()) {
+            JSONObject noteJson = new JSONObject();
+            noteJson.put("noteID", noteID);
+            noteJson.put("noteContent", listOfNotes.get(noteID));
+            json.put(noteJson);
+
+        }
+        return json;
+    }
 }

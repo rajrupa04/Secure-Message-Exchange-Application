@@ -1,5 +1,8 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import javax.crypto.SecretKey;
@@ -9,11 +12,10 @@ import javax.crypto.KeyGenerator;
 //This class represents a user who has an account in the system. Each user will possess
 //their own individual user ID, password, and hub.
 
-public class User {
+public class User implements Writable {
     private Integer userID;
     private String username;
     private String password;
-    private SecretKey privateKey;
     private Hub hub;
     private Integer minimumLimitForUserID = 10000000;
     private Integer maximumLimitForUserID = 99999999;
@@ -79,6 +81,19 @@ public class User {
     }
 
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("UserID",userID);
+        json.put("Hub",this.hub.toJson());
+        return json;
+    }
 
-
+    public JSONObject addUserToJson() {
+        JSONObject json = new JSONObject();
+        json.put("UserID",userID);
+        json.put("Username",username);
+        json.put("Password",password);
+        return json;
+    }
 }
