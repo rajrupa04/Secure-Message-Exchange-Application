@@ -23,15 +23,22 @@ public class JsonWriter {
     // EFFECTS: opens writer; throws FileNotFoundException if destination file cannot
     // be opened for writing
     public void open() throws IOException {
-        writer = new PrintWriter(new FileWriter(destination, true));
+        writer = new PrintWriter(new FileWriter(destination));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: opens writer in append mode; throws FileNotFoundException if destination file cannot
+    // be opened for writing
+    public void openInAppendMode() throws IOException {
+        writer = new PrintWriter(new FileWriter(destination,true));
     }
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of hub to file
     public void writeHub(String username, Hub hub) throws FileNotFoundException {
         JSONObject json = new JSONObject();
-
-        json.put(username, hub.toJson());
+        json.put("Username",username);
+        json.put("Hub",hub.toJson());
         saveToFile(json.toString(TAB));
     }
 
@@ -41,7 +48,7 @@ public class JsonWriter {
         JSONObject userJson = new JSONObject();
         userJson.put(u.getUsername(),u.addUserToJson());
         try {
-            open();
+            openInAppendMode();
             appendToFile(userJson.toString(TAB));
         } catch (FileNotFoundException e) {
             System.out.println("Error: File not found - " + destination);
