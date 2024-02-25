@@ -134,9 +134,9 @@ public class SecureMsgApp {
 
     //EFFECTS: asks the user if they would like to view their hub or quit the application
     private void hubOrQuitForExistingUser() {
-        System.out.println("Would you like to load your saved hub from file or quit? "
-                +
-                "(enter l to continue, q to quit)");
+        System.out.println("Would you like to load your saved hub from file, create a new hub, or quit?");
+        System.out.println("Enter 'l' to load\nEnter 'n' to create a new hub\nEnter 'q' to quit");
+
         String ans = input.next();
         if (ans.equals("q")) {
             System.exit(0);
@@ -152,6 +152,10 @@ public class SecureMsgApp {
             Hub userHub = user.getHub();
             displayHub(userHub);
             displayHubMenu();
+        } else if (ans.equals("n")) {
+            Hub userHub = new Hub();
+            displayHub(userHub);
+            displayHubMenu();
         }
 
 
@@ -159,7 +163,7 @@ public class SecureMsgApp {
 
     private void loadHubFromFile() throws NoSuchPaddingException, NoSuchAlgorithmException {
         try {
-            user.setHub(jsonReader.read());
+            user.setHub(jsonReader.read(user.getUserID()));
             System.out.println("Loaded " + user.getUsername() + "'s Hub from" + JSON_HUB);
         } catch (IOException e) {
             System.out.println("Error! Unable to read from file: " + JSON_HUB);
@@ -216,8 +220,8 @@ public class SecureMsgApp {
     private void interpretChoiceFive() {
         try {
             if (user != null && user.getUsername() != null) {
-                jsonWriter.open();
-                jsonWriter.writeHub(user.getUsername(), user.getHub());
+                jsonWriter.openInAppendMode();
+                jsonWriter.writeHub(user.getUsername(), user.getUserID().toString(), user.getHub());
                 jsonWriter.close();
                 System.out.println("Saved " + user.getUsername() + "'s Hub to" + JSON_HUB);
             } else {

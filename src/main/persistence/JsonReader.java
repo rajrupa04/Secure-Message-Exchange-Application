@@ -33,14 +33,14 @@ public class JsonReader {
 
     // EFFECTS: reads hub from file and returns it;
     // throws IOException if an error occurs reading data from file
-    public Hub read() throws IOException, NoSuchPaddingException, NoSuchAlgorithmException {
+    public Hub read(Integer userID) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException {
         String hubJsonData = readFile(hubSource);
         String userJsonData = readFile(userSource);
 
         JSONObject hubJsonObject = new JSONObject(hubJsonData);
         JSONObject userJsonObject = new JSONObject(userJsonData); // Parse user data JSON
 
-        return parseHub(hubJsonObject, userJsonObject);
+        return parseHub(hubJsonObject, userJsonObject, userID);
     }
 
     public JSONObject returnJsonObject(String s) throws IOException {
@@ -50,10 +50,10 @@ public class JsonReader {
     }
 
     // EFFECTS: parses hub from JSON object and returns it
-    private Hub parseHub(JSONObject jsonObject, JSONObject userJsonObject) throws NoSuchPaddingException,
+    private Hub parseHub(JSONObject jsonObject, JSONObject userJsonObject, Integer id) throws NoSuchPaddingException,
             NoSuchAlgorithmException {
-        String username = jsonObject.getString("Username");
-        JSONObject hubObject = jsonObject.getJSONObject("Hub");
+        JSONObject userObject = jsonObject.getJSONObject(id.toString());
+        JSONObject hubObject = userObject.getJSONObject("Hub");
         Hub h = new Hub();
         addNote(h, hubObject);
         addReminder(h, hubObject);
