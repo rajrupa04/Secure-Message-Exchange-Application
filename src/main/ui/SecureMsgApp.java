@@ -1,11 +1,16 @@
 package ui;
 
 import model.*;
+import org.json.JSONObject;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -17,15 +22,24 @@ import java.util.Scanner;
 //This class contains all the methods handling user interactions and input.
 
 public class SecureMsgApp {
+    private static final String JSON_HUB = "./data/hub.json";
+    private static final String JSON_USERINFO = "./data/userinfo.json";
     private UserMap userMap;
     private User user;
     private Scanner input;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
+    private JsonWriter jsonWriterUserInfo;
+
 
 
     //EFFECTS: constructs a new SecureMsgApp object
     public SecureMsgApp() {
         userMap = new UserMap();
         user = new User();
+        jsonWriter = new JsonWriter(JSON_HUB);
+        jsonWriterUserInfo = new JsonWriter(JSON_USERINFO);
+        jsonReader = new JsonReader(JSON_HUB,JSON_USERINFO);
         runSecureMsgApp();
     }
 
@@ -42,15 +56,24 @@ public class SecureMsgApp {
 
             if (answer.equals("yes")) {
                 displayLoginPageForNewUser();
+                hubOrQuit();
             } else {
                 displayLoginPageForExistingUser();
+                hubOrQuitForExistingUser();
             }
 
-            hubOrQuit();
+
+
 
         }
 
 
+    }
+
+    private void hubOrQuit() {
+        Hub userHub = user.getHub();
+        displayHub(userHub);
+        displayHubMenu();
     }
 
     //EFFECTS: displays the login page for a user who already has an existing account
@@ -61,14 +84,28 @@ public class SecureMsgApp {
         String password = input.next();
         System.out.println("Please enter your unique user ID.");
         Integer id = input.nextInt();
-        User userFromUserMap = userMap.getUser(id);
-        Boolean successfulLogin = userFromUserMap.userLogIn(id, username, password);
+        User userFromFile = readUserFromFile(id);
+        this.user = userFromFile;
+        Boolean successfulLogin = userFromFile.userLogIn(id, username, password);
         if (successfulLogin) {
             System.out.println("Login successful! Welcome.");
         } else {
             System.out.println("Invalid Credentials. Please try again!");
         }
     }
+
+    private User readUserFromFile(Integer id) {
+        try {
+            JSONObject userJsonObject = jsonReader.returnJsonObject(JSON_USERINFO);
+            User u = jsonReader.getUserByID(id, userJsonObject);
+            return u;
+        } catch (IOException e) {
+            System.out.println("Error retrieving user from file: " + JSON_USERINFO);
+        }
+        return null;
+    }
+
+
 
     //EFFECTS: displays the login page for a new user without an existing account
     private void displayLoginPageForNewUser() {
@@ -84,6 +121,11 @@ public class SecureMsgApp {
         System.out.println("Account successfully created! Welcome, "
                 + nameOfUser + ". Your unique user ID is: " + userID);
         userMap.addUser(userID, user);
+        try {
+            jsonWriterUserInfo.writeUser(user);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unexpected FileNotFoundException!");
+        }
     }
 
 
@@ -91,19 +133,37 @@ public class SecureMsgApp {
 
 
     //EFFECTS: asks the user if they would like to view their hub or quit the application
-    private void hubOrQuit() {
-        System.out.println("Would you like to continue to your hub or quit? (enter any key to continue, q to quit)");
+    private void hubOrQuitForExistingUser() {
+        System.out.println("Would you like to load your saved hub from file or quit? "
+                +
+                "(enter l to continue, q to quit)");
         String ans = input.next();
         if (ans.equals("q")) {
             System.exit(0);
-        } else {
+        } else if (ans.equals("l")) {
             System.out.println("Loading your hub...");
+            try {
+                loadHubFromFile();
+            } catch (NoSuchPaddingException e) {
+                System.out.println("Unexpected NoSuchPaddingException!");
+            } catch (NoSuchAlgorithmException e) {
+                System.out.println("Unexpected NoSuchPaddingException!");
+            }
             Hub userHub = user.getHub();
             displayHub(userHub);
             displayHubMenu();
         }
 
 
+    }
+
+    private void loadHubFromFile() throws NoSuchPaddingException, NoSuchAlgorithmException {
+        try {
+            user.setHub(jsonReader.read());
+            System.out.println("Loaded " + user.getUsername() + "'s Hub from" + JSON_HUB);
+        } catch (IOException e) {
+            System.out.println("Error! Unable to read from file: " + JSON_HUB);
+        }
     }
 
 
@@ -113,7 +173,7 @@ public class SecureMsgApp {
         System.out.println("1. Add a new note\n2. Add a new reminder\n3. Add an existing user to your emergency "
                 +
                 "contact list");
-        System.out.println("4. Send a message to an existing user\n5. Log out\n6. Quit");
+        System.out.println("4. Send a message to an existing user\n5. Save hub to file\n6. Quit");
         System.out.println("Choose an action (1-6):");
         Integer choice = input.nextInt();
         interpretChoice(choice);
@@ -142,7 +202,7 @@ public class SecureMsgApp {
                 } catch (NoSuchAlgorithmException e) {
                     System.err.println("Unexpected NoSuchAlgorithmException!");
                 }
-                hubOrQuit();
+                hubOrQuitForExistingUser();
 
             case 5:
                 interpretChoiceFive();
@@ -154,8 +214,20 @@ public class SecureMsgApp {
     }
 
     private void interpretChoiceFive() {
-        System.out.println("Logging out...");
-        runSecureMsgApp();
+        try {
+            if (user != null && user.getUsername() != null) {
+                jsonWriter.open();
+                jsonWriter.writeHub(user.getUsername(), user.getHub());
+                jsonWriter.close();
+                System.out.println("Saved " + user.getUsername() + "'s Hub to" + JSON_HUB);
+            } else {
+                System.out.println("User is not properly initialized or username is null.");
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Unexpected FileNotFoundException!");
+        } catch (IOException e) {
+            System.out.println("Unexpected IOException!");
+        }
     }
 
 
@@ -227,7 +299,7 @@ public class SecureMsgApp {
         User userToAdd = userMap.getUser(id);
         contactList.add(userToAdd.getUsername());
         System.out.println("Added!");
-        hubOrQuit();
+        displayHubMenu();
     }
 
 
@@ -241,7 +313,7 @@ public class SecureMsgApp {
         String noteText = input.next();
         userNotes.addNote(noteID, noteText);
         System.out.println("Note added!");
-        hubOrQuit();
+        displayHubMenu();
 
     }
 
@@ -256,7 +328,7 @@ public class SecureMsgApp {
         String rtext = input.next();
         r.addNewReminder(LocalDate.parse(date), rtext);
         System.out.println("Reminder added!");
-        hubOrQuit();
+        displayHubMenu();
     }
 
 

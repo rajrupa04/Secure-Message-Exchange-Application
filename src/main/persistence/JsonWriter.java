@@ -22,22 +22,40 @@ public class JsonWriter {
     // MODIFIES: this
     // EFFECTS: opens writer; throws FileNotFoundException if destination file cannot
     // be opened for writing
-    public void open() throws FileNotFoundException {
-        writer = new PrintWriter(new File(destination));
+    public void open() throws IOException {
+        writer = new PrintWriter(new FileWriter(destination, true));
     }
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of hub to file
-    public void writeHub(Hub hub) {
-        JSONObject json = hub.toJson();
+    public void writeHub(String username, Hub hub) throws FileNotFoundException {
+        JSONObject json = new JSONObject();
+
+        json.put(username, hub.toJson());
         saveToFile(json.toString(TAB));
     }
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of user to file
-    public void writeUser(User u) {
-        JSONObject userJson = u.toJson();
-        saveToFile(userJson.toString(TAB));
+    public void writeUser(User u) throws FileNotFoundException {
+        JSONObject userJson = new JSONObject();
+        userJson.put(u.getUsername(),u.addUserToJson());
+        try {
+            open();
+            appendToFile(userJson.toString(TAB));
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found - " + destination);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            close();
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: appends string to file
+    private void appendToFile(String json) {
+        writer.println(json);
     }
 
     // MODIFIES: this

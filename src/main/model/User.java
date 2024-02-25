@@ -56,6 +56,18 @@ public class User implements Writable {
         return this.username;
     }
 
+    public void setUsername(String s) {
+        this.username = s;
+    }
+
+    public void setPassword(String s) {
+        this.password = s;
+    }
+
+    public void setUserID(Integer i) {
+        this.userID = i;
+    }
+
     //REQUIRES: none
     //MODIFIES: none
     //EFFECTS: returns the password of the currenrt user
@@ -78,6 +90,13 @@ public class User implements Writable {
     //EFFECTS: returns the user's personal hub
     public Hub getHub() {
         return this.hub;
+    }
+
+    //REQUIRES: none
+    //MODIFIES: this
+    //EFFECTS: sets the user's hub to an updated version
+    public void setHub(Hub h) {
+        this.hub = h;
     }
 
 

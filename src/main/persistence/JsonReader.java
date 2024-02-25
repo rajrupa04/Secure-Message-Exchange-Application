@@ -43,15 +43,22 @@ public class JsonReader {
         return parseHub(hubJsonObject, userJsonObject);
     }
 
+    public JSONObject returnJsonObject(String s) throws IOException {
+        String data = readFile(s);
+        JSONObject j = new JSONObject(data);
+        return j;
+    }
+
     // EFFECTS: parses hub from JSON object and returns it
     private Hub parseHub(JSONObject jsonObject, JSONObject userJsonObject) throws NoSuchPaddingException,
             NoSuchAlgorithmException {
         String username = jsonObject.getString("Username");
+        JSONObject hubObject = jsonObject.getJSONObject("Hub");
         Hub h = new Hub();
-        addNote(h, jsonObject);
-        addReminder(h, jsonObject);
-        addContactList(h,jsonObject);
-        addMessageFolder(h, jsonObject, userJsonObject);
+        addNote(h, hubObject);
+        addReminder(h, hubObject);
+        addContactList(h,hubObject);
+        addMessageFolder(h, hubObject, userJsonObject);
         return h;
     }
 
@@ -96,7 +103,8 @@ public class JsonReader {
     }
 
     //EFFECTS: fetches the user information matching the user ID from the JSON object
-    private User getUserByID(Integer senderUserID, JSONObject userJsonObject) {
+    public User getUserByID(Integer senderUserID, JSONObject userJsonObject) {
+        User u = new User();
         JSONArray usersArray = userJsonObject.getJSONArray("Users");
         for (Object userObj : usersArray) {
             JSONObject userJson = (JSONObject) userObj;
@@ -104,21 +112,22 @@ public class JsonReader {
             if (userID.equals(senderUserID)) {
                 String username = userJson.getString("Username");
                 String password = userJson.getString("Password");
-                User u = new User();
-                u.userLogIn(userID,username,password);
-                return u;
+                u.setUsername(username);
+                u.setPassword(password);
+                u.setUserID(userID);
+
             }
         }
-        return null;
+        return u;
+
     }
 
     // MODIFIES: h
     // EFFECTS: parses contact list from JSON object and adds them to hub
     private void addContactList(Hub h, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("ContactList");
-        for (Object json : jsonArray) {
-            JSONObject nextContact = (JSONObject) json;
-            String username = nextContact.getString("Username");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            String username = jsonArray.getString(i);
             h.getContactList().add(username);
         }
     }
