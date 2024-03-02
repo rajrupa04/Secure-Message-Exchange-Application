@@ -15,6 +15,8 @@ public class JsonWriter {
     private PrintWriter writer;
     private PrintWriter writerAppend;
     private String destination;
+    private static final String JSON_USERINFO = "./data/userinfo.json";
+    private String pathForSpecificUser;
 
     // EFFECTS: constructs writer to write to destination file
     public JsonWriter(String destination) {
@@ -38,29 +40,34 @@ public class JsonWriter {
     // MODIFIES: this
     // EFFECTS: writes JSON representation of hub to file
     public void writeHub(String username, String userID, Hub hub) throws IOException {
+        pathForSpecificUser = "./data/" + username + ".json";
         JSONObject json = new JSONObject();
-        json.put("Username", username);
         json.put("Hub", hub.toJson());
-        JSONObject toWrite = new JSONObject();
-        toWrite.put(userID, json);
-        appendToFile(toWrite.toString(TAB));
+        json.put("Username", username);
+        saveToFile(json.toString(TAB));
     }
 
     // MODIFIES: this
-// EFFECTS: writes JSON representation of user to file
+    // EFFECTS: writes JSON representation of user to file
     public void writeUser(User u) throws FileNotFoundException {
+        JSONArray usersArray;
         JSONObject userJson = new JSONObject();
-        userJson.put(u.getUsername(),u.addUserToJson());
+        userJson = u.addUserToJson();
         try {
-            openInAppendMode();
-            appendToFile(userJson.toString(TAB));
+            JsonReader jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
+            JSONObject existingData = jsonReader.returnJsonObject(JSON_USERINFO);
+            usersArray = existingData.getJSONArray("Users");
+            usersArray.put(userJson);
+            JSONObject newData = new JSONObject();
+            newData.put("Users", usersArray);
+            open();
+            appendToFile(newData.toString(TAB));
         } catch (FileNotFoundException e) {
-            System.out.println("Error: File not found - " + destination);
+            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            close();
         }
+
     }
 
     // MODIFIES: this

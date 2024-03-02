@@ -22,7 +22,7 @@ import java.util.Scanner;
 //This class contains all the methods handling user interactions and input.
 
 public class SecureMsgApp {
-    private static final String JSON_HUB = "./data/hub.json";
+    private String pathForSpecificUser;
     private static final String JSON_USERINFO = "./data/userinfo.json";
     private UserMap userMap;
     private User user;
@@ -37,9 +37,8 @@ public class SecureMsgApp {
     public SecureMsgApp() {
         userMap = new UserMap();
         user = new User();
-        jsonWriter = new JsonWriter(JSON_HUB);
         jsonWriterUserInfo = new JsonWriter(JSON_USERINFO);
-        jsonReader = new JsonReader(JSON_HUB,JSON_USERINFO);
+        jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
         runSecureMsgApp();
     }
 
@@ -89,8 +88,10 @@ public class SecureMsgApp {
         Boolean successfulLogin = userFromFile.userLogIn(id, username, password);
         if (successfulLogin) {
             System.out.println("Login successful! Welcome.");
+            pathForSpecificUser = "./data/" + username + ".json";
         } else {
             System.out.println("Invalid Credentials. Please try again!");
+            runSecureMsgApp();
         }
     }
 
@@ -106,7 +107,6 @@ public class SecureMsgApp {
     }
 
 
-
     //EFFECTS: displays the login page for a new user without an existing account
     private void displayLoginPageForNewUser() {
         System.out.println("Hello, new User!");
@@ -120,13 +120,23 @@ public class SecureMsgApp {
         Integer userID = user.getUserID();
         System.out.println("Account successfully created! Welcome, "
                 + nameOfUser + ". Your unique user ID is: " + userID);
+        pathForSpecificUser = "./data/" + username + ".json";
         userMap.addUser(userID, user);
+        addNewUserToFile(user);
+    }
+
+    private void addNewUserToFile(User u) {
         try {
+            jsonWriterUserInfo.openInAppendMode();
             jsonWriterUserInfo.writeUser(user);
-        } catch (FileNotFoundException e) {
+            jsonWriterUserInfo.close();
+
+        } catch (IOException e) {
             System.out.println("Unexpected FileNotFoundException!");
         }
+
     }
+
 
 
 
@@ -143,7 +153,7 @@ public class SecureMsgApp {
         } else if (ans.equals("l")) {
             System.out.println("Loading your hub...");
             try {
-                loadHubFromFile();
+                loadHubFromFile(user.getUsername());
             } catch (NoSuchPaddingException e) {
                 System.out.println("Unexpected NoSuchPaddingException!");
             } catch (NoSuchAlgorithmException e) {
@@ -161,12 +171,14 @@ public class SecureMsgApp {
 
     }
 
-    private void loadHubFromFile() throws NoSuchPaddingException, NoSuchAlgorithmException {
+    private void loadHubFromFile(String username) throws NoSuchPaddingException, NoSuchAlgorithmException {
         try {
+            jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
+            pathForSpecificUser = "./data/" + username + ".json";
             user.setHub(jsonReader.read(user.getUserID()));
-            System.out.println("Loaded " + user.getUsername() + "'s Hub from" + JSON_HUB);
+            System.out.println("Loaded " + user.getUsername() + "'s Hub from" + pathForSpecificUser);
         } catch (IOException e) {
-            System.out.println("Error! Unable to read from file: " + JSON_HUB);
+            System.out.println("Error! Unable to read from file: " + pathForSpecificUser);
         }
     }
 
@@ -220,10 +232,11 @@ public class SecureMsgApp {
     private void interpretChoiceFive() {
         try {
             if (user != null && user.getUsername() != null) {
-                jsonWriter.openInAppendMode();
+                jsonWriter = new JsonWriter(pathForSpecificUser);
+                jsonWriter.open();
                 jsonWriter.writeHub(user.getUsername(), user.getUserID().toString(), user.getHub());
                 jsonWriter.close();
-                System.out.println("Saved " + user.getUsername() + "'s Hub to" + JSON_HUB);
+                System.out.println("Saved " + user.getUsername() + "'s Hub to" + pathForSpecificUser);
             } else {
                 System.out.println("User is not properly initialized or username is null.");
             }
@@ -242,15 +255,43 @@ public class SecureMsgApp {
         User sender = this.user;
         System.out.println("Enter the user ID of the recipient.");
         Integer rid = input.nextInt();
-        User recipient = userMap.getUser(rid);
+        User recipient = readUserFromFile(rid);
+        loadRecipientHub(recipient);
+        System.out.println("You have chosen to send a message to: " + recipient.getUsername() + ".");
         System.out.println("State the urgency level of this message (1. REGULAR, 2. URGENT, 3. EMERGENCY)");
         Integer ul = input.nextInt();
         UrgencyLevel msgUrgency = chooseUrgency(ul);
         System.out.println("Enter the contents of the message you'd like to send.");
         String msgContents = input.next();
         Integer messageID = 0;
+        sendMessageToRecipient(messageID, sender, recipient, msgContents, msgUrgency);
+
+    }
+
+    private void loadRecipientHub(User recipient) throws NoSuchPaddingException, NoSuchAlgorithmException {
         try {
-            messageID = sender.getHub().sendMessage(sender, recipient, msgContents, msgUrgency);
+            jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
+            pathForSpecificUser = "./data/" + recipient.getUsername() + ".json";
+            recipient.setHub(jsonReader.read(user.getUserID()));
+            System.out.println("Loaded " + recipient.getUsername() + "'s Hub from" + pathForSpecificUser);
+        } catch (IOException e) {
+            System.out.println("Error! Unable to read from file: " + pathForSpecificUser);
+        }
+
+    }
+
+    private void sendMessageToRecipient(Integer messageID, User sender, User recipient, String m, UrgencyLevel u) {
+        if (sender.getHub() == null) {
+            System.err.println("Sender or sender's hub is not properly initialized.");
+        }
+
+        if (recipient.getHub() == null) {
+            System.err.println("Recipient user is null.");
+        }
+
+        try {
+            messageID = sender.getHub().sendMessage(sender, recipient, m, u);
+            System.out.println("Message sent! The message ID is: " + messageID);
         } catch (UnsupportedEncodingException e) {
             System.err.println("Unexpected UnsupportedEncodingException!");
         } catch (IllegalBlockSizeException e) {
@@ -259,11 +300,13 @@ public class SecureMsgApp {
             System.err.println("Unexpected BadPaddingException!");
         } catch (InvalidKeyException e) {
             System.err.println("Unexpected InvalidKeyException!");
+        } catch (NoSuchPaddingException e) {
+            System.err.println("Unexpected NoSuchPaddingException!");
+        } catch (NoSuchAlgorithmException e) {
+            System.err.println("Unexpected NoSuchAlgorithmException!");
         }
-
-        System.out.println("Message sent! The message ID is: " + messageID);
-
     }
+
 
 
     //EFFECTS: returns the urgency level corresponding to the user inputted integer

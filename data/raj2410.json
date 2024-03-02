@@ -1,0 +1,29 @@
+{
+  "Username": "raj2410",
+  "Hub": {
+    "Notes": [
+      {
+        "noteID": 1,
+        "noteContent": "Note 1 for Rajrupa"
+      },
+      {
+        "noteID": 2,
+        "noteContent": "Note 2 for Rajrupa"
+      }
+    ],
+    "Reminders": [
+      {
+        "Date": "2024-02-25",
+        "reminderContent": "Reminder 1 for Rajrupa"
+      },
+      {
+        "Date": "2024-02-26",
+        "reminderContent": "Reminder 2 for Rajrupa"
+      }
+    ],
+    "ContactList": [
+      "john_doe"
+    ],
+    "MessageFolder": []
+  }
+}

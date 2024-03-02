@@ -52,8 +52,7 @@ public class JsonReader {
     // EFFECTS: parses hub from JSON object and returns it
     private Hub parseHub(JSONObject jsonObject, JSONObject userJsonObject, Integer id) throws NoSuchPaddingException,
             NoSuchAlgorithmException {
-        JSONObject userObject = jsonObject.getJSONObject(id.toString());
-        JSONObject hubObject = userObject.getJSONObject("Hub");
+        JSONObject hubObject = jsonObject.getJSONObject("Hub");
         Hub h = new Hub();
         addNote(h, hubObject);
         addReminder(h, hubObject);
