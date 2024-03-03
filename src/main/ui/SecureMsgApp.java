@@ -164,6 +164,7 @@ public class SecureMsgApp {
             displayHubMenu();
         } else if (ans.equals("n")) {
             Hub userHub = new Hub();
+            user.setHub(userHub);
             displayHub(userHub);
             displayHubMenu();
         }
