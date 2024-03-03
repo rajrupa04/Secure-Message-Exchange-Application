@@ -1,15 +1,10 @@
 {
     "Hub": {
-        "Reminders": [{
-            "reminderContent": "wake me up when september ends",
-            "Date": "2024-10-01"
-        }],
+        "Reminders": [],
         "MessageFolder": [],
         "ContactList": [],
-        "Notes": [{
-            "noteContent": "New Note for Khushi",
-            "noteID": 7
-        }]
+        "Notes": [],
+        "Notifications": []
     },
     "Username": "khush12"
 }

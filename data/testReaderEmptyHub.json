@@ -1,4 +1,10 @@
 {
-  "Username": "my_hub",
-  "Hub": {}
+  "Hub": {
+    "Reminders": [],
+    "MessageFolder": [],
+    "ContactList": [],
+    "Notes": [],
+    "Notifications": []
+  },
+  "Username": "testuser1"
 }

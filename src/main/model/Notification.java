@@ -3,12 +3,13 @@ package model;
 //This class represents a notification which will be sent to the recipient when a user sends them
 //a message. The notification will be of different types based on how urgent the message is.
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
 
 import java.util.HashMap;
 
-public class Notification implements Writable {
+public class Notification {
     private HashMap<UrgencyLevel,String> notifications;
 
     public Notification() {
@@ -64,9 +65,14 @@ public class Notification implements Writable {
         return this.notifications;
     }
 
-
-    @Override
-    public JSONObject toJson() {
-        return null;
+    public JSONArray toJson() {
+        JSONArray json = new JSONArray();
+        for (UrgencyLevel u : notifications.keySet()) {
+            JSONObject notifToAdd = new JSONObject();
+            notifToAdd.put("UrgencyLevel",u.toString());
+            notifToAdd.put("Message",getNotification(u));
+            json.put(notifToAdd);
+        }
+        return json;
     }
 }

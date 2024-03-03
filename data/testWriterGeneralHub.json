@@ -1,15 +1,19 @@
 {
-  "Hub": {
-    "Reminders": [{
-      "reminderContent": "wake me up when september ends",
-      "Date": "2024-10-01"
-    }],
-    "MessageFolder": [],
-    "ContactList": [],
-    "Notes": [{
-      "noteContent": "New Note for Khushi",
-      "noteID": 7
-    }]
-  },
-  "Username": "khush12"
+    "Hub": {
+        "Reminders": [{
+            "reminderContent": "Wake me up when September ends",
+            "Date": "2024-10-01"
+        }],
+        "MessageFolder": [],
+        "ContactList": ["raj2410"],
+        "Notifications": [{
+            "Message": "This is a new REGULAR notification",
+            "UrgencyLevel": "REGULAR"
+        }],
+        "Notes": [{
+            "noteContent": "Test note 777",
+            "noteID": 777
+        }]
+    },
+    "Username": "testuser1"
 }

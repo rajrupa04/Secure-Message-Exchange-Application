@@ -58,7 +58,27 @@ public class JsonReader {
         addReminder(h, hubObject);
         addContactList(h,hubObject);
         addMessageFolder(h, hubObject, userJsonObject);
+        addNotifications(h,hubObject);
         return h;
+    }
+
+    // MODIFIES: h
+    // EFFECTS: parses notifications from JSON object and adds them to hub
+    private void addNotifications(Hub h, JSONObject hubObject) {
+        JSONArray jsonArray = hubObject.getJSONArray("Notifications");
+        for (Object json : jsonArray) {
+            JSONObject nextNotif = (JSONObject) json;
+            addSingleNotification(h, nextNotif);
+        }
+    }
+
+    // MODIFIES: h
+    // EFFECTS: parses a single notification from JSON object and adds it to hub
+    private void addSingleNotification(Hub h, JSONObject nextNotif) {
+        String u = nextNotif.getString("UrgencyLevel");
+        UrgencyLevel ul = UrgencyLevel.valueOf(u);
+        String message = nextNotif.getString("Message");
+        h.getNotifications().addNotification(ul,message);
     }
 
     // MODIFIES: h

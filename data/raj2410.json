@@ -24,6 +24,8 @@
     "ContactList": [
       "john_doe"
     ],
-    "MessageFolder": []
+    "MessageFolder": [],
+
+    "Notifications": []
   }
 }

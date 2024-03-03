@@ -108,6 +108,7 @@ public class Hub implements Writable {
         json.put("Reminders", reminder.toJson());
         json.put("ContactList", addContactListToJson(contactList));
         json.put("MessageFolder", messageFolder.toJson());
+        json.put("Notifications",notifications.toJson());
         return json;
     }
 
