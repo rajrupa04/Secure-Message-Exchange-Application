@@ -72,7 +72,7 @@ public class JsonWriter {
 
     // MODIFIES: this
     // EFFECTS: appends string to file
-    private void appendToFile(String json) {
+    public void appendToFile(String json) {
         writerAppend.println(json);
     }
 

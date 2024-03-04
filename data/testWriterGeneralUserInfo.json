@@ -5,8 +5,13 @@
     "Password": "p@ssw0rd"
   },
   {
-    "Username": "testuser2",
-    "UserID": 98765432,
-    "Password": "qwerty"
+    "Username": "john_doe",
+    "UserID": 99432042,
+    "Password": "p@ssw0rd"
+  },
+  {
+    "Username": "khush12",
+    "UserID": 85019657,
+    "Password": "ringostarr"
   }
 ]}

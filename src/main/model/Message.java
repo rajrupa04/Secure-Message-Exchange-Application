@@ -57,7 +57,7 @@ public class Message extends Encryption implements Writable {
 
     //REQUIRES: none
     //MODIFIES: this
-    //EFFECTS: sets the encryptedMessageText field
+    //EFFECTS: gets the encryptedMessageText field
     public String getEncryptedMessageText() {
         return this.encryptedMessageText;
     }

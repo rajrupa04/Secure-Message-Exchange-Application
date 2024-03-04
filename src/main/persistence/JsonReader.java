@@ -43,7 +43,7 @@ public class JsonReader {
         return parseHub(hubJsonObject, userJsonObject, userID);
     }
 
-    public JSONObject returnJsonObject(String s) throws IOException {
+    public static JSONObject returnJsonObject(String s) throws IOException {
         String data = readFile(s);
         JSONObject j = new JSONObject(data);
         return j;
@@ -83,7 +83,7 @@ public class JsonReader {
 
     // MODIFIES: h
     // EFFECTS: parses messages from JSON object and adds them to hub
-    private void addMessageFolder(Hub h, JSONObject jsonObject, JSONObject userJsonObject)
+    public void addMessageFolder(Hub h, JSONObject jsonObject, JSONObject userJsonObject)
             throws NoSuchPaddingException,
             NoSuchAlgorithmException {
         JSONArray jsonArray = jsonObject.getJSONArray("MessageFolder");
@@ -95,7 +95,7 @@ public class JsonReader {
 
     // MODIFIES: h
     // EFFECTS: parses a single message from JSON object and adds them to hub
-    private void addSingleMessage(Hub h, JSONObject jsonObject, JSONObject userJsonObject)
+    public void addSingleMessage(Hub h, JSONObject jsonObject, JSONObject userJsonObject)
             throws NoSuchPaddingException,
             NoSuchAlgorithmException {
         Integer senderUserID = jsonObject.getInt("SenderUserID");
@@ -116,7 +116,7 @@ public class JsonReader {
     }
 
     //EFFECTS: converts the string secret key from the JSON object to a SecretKey type
-    private SecretKey stringToSecretKey(String secretKey) {
+    public SecretKey stringToSecretKey(String secretKey) {
         byte[] decodedKey = Base64.getDecoder().decode(secretKey);
         return new SecretKeySpec(decodedKey, "DES");
     }
@@ -189,7 +189,7 @@ public class JsonReader {
     }
 
     // EFFECTS: reads source file as string and returns it
-    private String readFile(String source) throws IOException {
+    public static String readFile(String source) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
 
         try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
