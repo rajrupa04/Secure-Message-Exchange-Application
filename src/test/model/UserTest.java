@@ -1,5 +1,6 @@
 package model;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -60,5 +61,26 @@ public class UserTest {
     @Test
     public void getHubTest() {
         assertNotNull(user1.getHub());
+    }
+
+    @Test
+    public void toJsonTest() {
+        Hub h = new Hub();
+        user1.setHub(h);
+        assertNotNull(user1.getHub());
+        JSONObject j = user1.toJson();
+        assertNotNull(j);
+        assertEquals(user1.getUserID(),j.getInt("UserID"));
+        assertNotNull(j.getJSONObject("Hub"));
+    }
+
+    @Test
+    public void addUserToJsonTest() {
+        JSONObject j = user1.addUserToJson();
+        assertNotNull(j);
+        assertEquals(user1.getUserID(), j.getInt("UserID"));
+        assertEquals("user1", j.getString("Username"));
+        assertEquals("157157", j.getString("Password"));
+
     }
 }

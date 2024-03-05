@@ -129,7 +129,7 @@ public class JsonWriterTest {
     }
 
     @Test
-    void testWriteUser() {
+    void testWriteUserSuccessFull() {
         JsonWriter writer = new JsonWriter("./data/testWriterGeneralUserInfo.json");
         try {
             writer.openInAppendMode();
@@ -154,6 +154,34 @@ public class JsonWriterTest {
         }
 
     }
+
+    @Test
+    void testClose() {
+        JsonWriter writer = new JsonWriter("./data/testWriterEmptyUserInfo.json");
+        try {
+            writer.open();
+            writer.close();
+            writer.openInAppendMode();
+            writer.close();
+        } catch (IOException e) {
+            fail("Unexpected IOException!");
+        }
+
+        JSONObject data = new JSONObject();
+        JSONArray usersArray = new JSONArray();
+        data.put("Users", usersArray);
+
+        // Define the file path
+        String filePath = "./data/testWriterEmptyUserInfo.json";
+
+        // Write the JSON data to the file
+        try (PrintWriter pw = new PrintWriter(filePath)) {
+            pw.write(data.toString(4)); // Write JSON with indentation
+        } catch (IOException e) {
+            fail("Unexpected IOException!");
+        }
+    }
+
 
 
 }

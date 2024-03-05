@@ -38,6 +38,8 @@ public class Message extends Encryption implements Writable {
         this.urgencyLevel = urgencyLevel;
         this.encryptionStatus = false;
         this.sharedKey = kg.generateKey();
+        this.decryptedMessageText = msgText;
+
 
     }
 
@@ -128,7 +130,7 @@ public class Message extends Encryption implements Writable {
         return json;
     }
 
-    private String secretKeyToString(SecretKey sharedKey) {
+    public String secretKeyToString(SecretKey sharedKey) {
         byte[] encodedKey = sharedKey.getEncoded();
         return Base64.getEncoder().encodeToString(encodedKey);
     }

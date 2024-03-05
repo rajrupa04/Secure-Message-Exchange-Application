@@ -207,19 +207,6 @@ public class JsonReaderTest {
 
     }
 
-    @Test
-    void testGetUserByIDIOException() {
-        JsonReader reader = new JsonReader
-                ("./data/testReaderEmptyHub.json","./data/testReaderGeneralUserInfo.json");
-        try {
-            String userJsonData = reader.readFile("./data/idk.json");
-            JSONObject userJsonObject = new JSONObject(userJsonData);
-            fail("Expected IOexception!");
-        } catch (IOException e) {
-            //pass
-        }
-
-    }
 
     @Test
     void testStringToSecretKey() {

@@ -53,24 +53,20 @@ public class JsonWriter {
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of user to file
-    public void writeUser(User u) throws FileNotFoundException {
+    public void writeUser(User u) throws IOException {
         JSONArray usersArray;
         JSONObject userJson = new JSONObject();
         userJson = u.addUserToJson();
-        try {
-            JsonReader jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
-            JSONObject existingData = jsonReader.returnJsonObject(JSON_USERINFO);
-            usersArray = existingData.getJSONArray("Users");
-            usersArray.put(userJson);
-            JSONObject newData = new JSONObject();
-            newData.put("Users", usersArray);
-            open();
-            appendToFile(newData.toString(TAB));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        JsonReader jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
+        JSONObject existingData = jsonReader.returnJsonObject(JSON_USERINFO);
+        usersArray = existingData.getJSONArray("Users");
+        usersArray.put(userJson);
+        JSONObject newData = new JSONObject();
+        newData.put("Users", usersArray);
+        open();
+        appendToFile(newData.toString(TAB));
+
 
     }
 

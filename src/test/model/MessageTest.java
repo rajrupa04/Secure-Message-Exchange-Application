@@ -1,14 +1,15 @@
 package model;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -168,6 +169,57 @@ public class MessageTest {
         } catch (InvalidKeyException e) {
             fail("Unexpected InvalidKeyException");
         }
+    }
+
+    @Test
+    void toJsonTest() {
+        try {
+            Message msg = new Message(sender,receiver,"test",UrgencyLevel.REGULAR);
+            msg.setEncryptedMessageText(msg.encryptMessage("test", msg.getSharedKey()));
+            MessageFolder msgFolder = new MessageFolder();
+            msgFolder.addNewMessage(msg.getMessageID(),msg);
+            JSONObject json = msg.toJson();
+            assertNotNull(json);
+            assertEquals(json.get("SenderUserID"),sender.getUserID());
+            assertEquals(json.get("RecipientUserID"),receiver.getUserID());
+            assertEquals(json.get("MessageID"),msg.getMessageID());
+            assertEquals(json.get("DecryptedMessageText"),"test");
+            assertEquals(json.get("EncryptedMessageText"),msg.getEncryptedMessageText());
+            assertEquals(stringToSecretKey(json.getString("SharedKey")),msg.getSharedKey());
+        } catch (NoSuchAlgorithmException e) {
+            fail("Unexpected NoSuchAlgorithmException");
+        } catch (NoSuchPaddingException e) {
+            fail("Unexpected NoSuchPaddingException");
+        } catch (UnsupportedEncodingException e) {
+            fail("Unexpected UnsupportedEncodingException");
+        } catch (IllegalBlockSizeException e) {
+            fail("Unexpected IllegalBlockSizeException");
+        } catch (BadPaddingException e) {
+            fail("Unexpected BadPaddingException");
+        } catch (InvalidKeyException e) {
+            fail("Unexpected InvalidKeyException");
+        }
+
+    }
+
+    public static SecretKey stringToSecretKey(String secretKeyString) {
+        byte[] decodedKey = Base64.getDecoder().decode(secretKeyString);
+        return new SecretKeySpec(decodedKey, "DES");
+    }
+
+    @Test
+    void testSecretKeyToString() {
+        KeyGenerator kg;
+        try {
+            kg = KeyGenerator.getInstance("DES");
+            SecretKey s = kg.generateKey();
+            String encodedKeyString = mTest.secretKeyToString(s);
+            byte[] decodedKey = Base64.getDecoder().decode(encodedKeyString);
+            assertArrayEquals(s.getEncoded(),decodedKey);
+        } catch (NoSuchAlgorithmException e) {
+            fail("Unexpected NoSuchAlgorithmException");
+        }
+
     }
 
 
