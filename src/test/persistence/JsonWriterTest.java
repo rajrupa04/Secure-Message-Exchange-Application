@@ -161,6 +161,11 @@ public class JsonWriterTest {
         try {
             writer.open();
             writer.close();
+        } catch (IOException e) {
+            fail("Unexpected IOException!");
+        }
+
+        try {
             writer.openInAppendMode();
             writer.close();
         } catch (IOException e) {
