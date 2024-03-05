@@ -37,6 +37,10 @@ public class JsonWriter {
         writerAppend = new PrintWriter(new FileWriter(destination,true));
     }
 
+    public PrintWriter getWriterAppend() {
+        return this.writerAppend;
+    }
+
     // MODIFIES: this
     // EFFECTS: writes JSON representation of hub to file
     public void writeHub(String username, String userID, Hub hub) throws IOException {

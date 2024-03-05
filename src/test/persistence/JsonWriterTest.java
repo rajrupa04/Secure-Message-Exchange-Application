@@ -7,8 +7,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.crypto.NoSuchPaddingException;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.List;
@@ -101,6 +103,56 @@ public class JsonWriterTest {
         } catch (NoSuchAlgorithmException e) {
             fail("Exception should not have been thrown");
         }
+    }
+
+    @Test
+    void testOpenInAppendMode() {
+        JsonWriter writer = new JsonWriter("./data/testWriterEmptyUserInfo.json");
+        try {
+            writer.openInAppendMode();
+            PrintWriter printWriter = writer.getWriterAppend();
+
+            assertNotNull(printWriter);
+
+
+            JsonReader reader = new JsonReader("./data/testWriterEmptyHub.json"
+                    ,"./data/testWriterEmptyUserInfo.json");
+            JSONObject jsonData = reader.returnJsonObject("./data/testWriterEmptyUserInfo.json");
+
+            assertNotNull(jsonData);
+
+
+        } catch (IOException e) {
+            fail("Unexpected IOException!");
+        }
+
+    }
+
+    @Test
+    void testWriteUser() {
+        JsonWriter writer = new JsonWriter("./data/testWriterGeneralUserInfo.json");
+        try {
+            writer.openInAppendMode();
+            writer.writeUser(u);
+            writer.close();
+            // Read the file and check if the user data is correctly appended
+            JsonReader reader = new JsonReader
+                    ("./data/testWriterGeneralHub.json", "./data/testWriterGeneralUserInfo.json");
+            JSONObject jsonData = reader.returnJsonObject("./data/testWriterGeneralUserInfo.json");
+            assertNotNull(jsonData);
+
+            // Check if the user data is correctly appended to the Users array
+            JSONArray usersArray = jsonData.getJSONArray("Users");
+            JSONObject lastUser = usersArray.getJSONObject(usersArray.length() - 1);
+            assertEquals("testuser1", lastUser.getString("Username"));
+            assertEquals("p@ssw0rd", lastUser.getString("Password"));
+            assertEquals(12345678, lastUser.getInt("UserID"));
+        } catch (FileNotFoundException e) {
+            fail("Unexpected FileNotFoundException");
+        } catch (IOException e) {
+            fail("Unexpected IOException");
+        }
+
     }
 
 
