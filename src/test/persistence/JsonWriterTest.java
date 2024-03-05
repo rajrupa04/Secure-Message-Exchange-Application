@@ -157,19 +157,28 @@ public class JsonWriterTest {
 
     @Test
     void testClose() {
-        JsonWriter writer = new JsonWriter("./data/testWriterEmptyUserInfo.json");
+        JsonWriter jsonWriter = new JsonWriter("./data/testWriterEmptyUserInfo.json");
         try {
-            writer.open();
-            writer.close();
+            jsonWriter.open();
+            jsonWriter.close();
         } catch (IOException e) {
             fail("Unexpected IOException!");
         }
 
         try {
-            writer.openInAppendMode();
-            writer.close();
+            jsonWriter.openInAppendMode();
+            jsonWriter.close();
         } catch (IOException e) {
             fail("Unexpected IOException!");
+        }
+
+        jsonWriter = new JsonWriter(null);
+        jsonWriter.setWriterAppend(null);
+        assertNull(jsonWriter.getWriterAppend());
+        try {
+            jsonWriter.close();
+        } catch (Exception e) {
+            fail("Unexpected Exception!");
         }
 
         JSONObject data = new JSONObject();
@@ -181,7 +190,7 @@ public class JsonWriterTest {
 
         // Write the JSON data to the file
         try (PrintWriter pw = new PrintWriter(filePath)) {
-            pw.write(data.toString(4)); // Write JSON with indentation
+            pw.write(data.toString(4));
         } catch (IOException e) {
             fail("Unexpected IOException!");
         }

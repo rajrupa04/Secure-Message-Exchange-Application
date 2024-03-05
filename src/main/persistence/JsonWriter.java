@@ -91,4 +91,8 @@ public class JsonWriter {
     private void saveToFile(String json) {
         writer.print(json);
     }
+
+    public void setWriterAppend(PrintWriter p) {
+        this.writerAppend = p;
+    }
 }
