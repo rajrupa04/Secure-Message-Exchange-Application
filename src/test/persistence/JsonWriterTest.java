@@ -14,8 +14,11 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
+
+// Some tests referenced from the JsonSerialization Demo
+// https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+
 public class JsonWriterTest {
     private User u;
 
@@ -33,11 +36,13 @@ public class JsonWriterTest {
     void testWriterInvalidFile() {
         try {
             Hub h = u.getHub();
+            assertNotNull(h);
             JsonWriter writer = new JsonWriter("./data/my\0illegal:fileName.json");
+            assertTrue(writer instanceof JsonWriter);
             writer.open();
             fail("IOException was expected");
         } catch (IOException e) {
-            // pass
+            // This exception is expected
         }
     }
 
@@ -45,7 +50,9 @@ public class JsonWriterTest {
     void testWriterEmptyHub() {
         try {
             Hub h = u.getHub();
+            assertNotNull(h);
             JsonWriter writer = new JsonWriter("./data/testWriterEmptyHub.json");
+            assertTrue(writer instanceof JsonWriter);
             writer.open();
             writer.writeHub(u.getUsername(),u.getUserID().toString(),h);
             writer.close();
@@ -70,6 +77,7 @@ public class JsonWriterTest {
     void testWriterGeneralWorkroom() {
         try {
             Hub h = u.getHub();
+            assertNotNull(h);
             h.getNote().addNote(777,"Test note 777");
             h.getReminder().addNewReminder
                     (LocalDate.parse("2024-10-01"),"Wake me up when September ends");
@@ -108,6 +116,7 @@ public class JsonWriterTest {
     @Test
     void testOpenInAppendMode() {
         JsonWriter writer = new JsonWriter("./data/testWriterEmptyUserInfo.json");
+        assertTrue(writer instanceof JsonWriter);
         try {
             writer.openInAppendMode();
             PrintWriter printWriter = writer.getWriterAppend();
@@ -131,17 +140,18 @@ public class JsonWriterTest {
     @Test
     void testWriteUserSuccessFull() {
         JsonWriter writer = new JsonWriter("./data/testWriterGeneralUserInfo.json");
+        assertTrue(writer instanceof JsonWriter);
         try {
             writer.openInAppendMode();
             writer.writeUser(u);
             writer.close();
-            // Read the file and check if the user data is correctly appended
+
             JsonReader reader = new JsonReader
                     ("./data/testWriterGeneralHub.json", "./data/testWriterGeneralUserInfo.json");
             JSONObject jsonData = reader.returnJsonObject("./data/testWriterGeneralUserInfo.json");
             assertNotNull(jsonData);
 
-            // Check if the user data is correctly appended to the Users array
+
             JSONArray usersArray = jsonData.getJSONArray("Users");
             JSONObject lastUser = usersArray.getJSONObject(usersArray.length() - 1);
             assertEquals("testuser1", lastUser.getString("Username"));
@@ -158,6 +168,7 @@ public class JsonWriterTest {
     @Test
     void testClose() {
         JsonWriter jsonWriter = new JsonWriter("./data/testWriterEmptyUserInfo.json");
+        assertTrue(jsonWriter instanceof JsonWriter);
         try {
             jsonWriter.open();
             jsonWriter.close();
@@ -175,6 +186,7 @@ public class JsonWriterTest {
         jsonWriter = new JsonWriter(null);
         jsonWriter.setWriterAppend(null);
         assertNull(jsonWriter.getWriterAppend());
+        assertNotNull(jsonWriter);
         try {
             jsonWriter.close();
         } catch (Exception e) {
@@ -185,10 +197,10 @@ public class JsonWriterTest {
         JSONArray usersArray = new JSONArray();
         data.put("Users", usersArray);
 
-        // Define the file path
+
         String filePath = "./data/testWriterEmptyUserInfo.json";
 
-        // Write the JSON data to the file
+
         try (PrintWriter pw = new PrintWriter(filePath)) {
             pw.write(data.toString(4));
         } catch (IOException e) {

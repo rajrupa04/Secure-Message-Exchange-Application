@@ -1,6 +1,7 @@
 package ui;
 
 import model.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -174,8 +175,8 @@ public class SecureMsgApp {
 
     private void loadHubFromFile(String username) throws NoSuchPaddingException, NoSuchAlgorithmException {
         try {
-            jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
             pathForSpecificUser = "./data/" + username + ".json";
+            jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
             user.setHub(jsonReader.read(user.getUserID()));
             System.out.println("Loaded " + user.getUsername() + "'s Hub from" + pathForSpecificUser);
         } catch (IOException e) {
@@ -204,12 +205,15 @@ public class SecureMsgApp {
                 interpretChoiceOne();
 
 
+
             case 2:
                 interpretChoiceTwo();
 
 
+
             case 3:
                 interpretChoiceThree();
+
 
             case 4:
                 try {
@@ -223,10 +227,25 @@ public class SecureMsgApp {
 
             case 5:
                 interpretChoiceFive();
+                System.exit(0);
             case 6:
+                interpretChoiceSix();
                 System.exit(0);
 
+        }
+    }
 
+    private void interpretChoiceSix() {
+        System.out.println("Are you sure you want to quit? Your hub is not saved!");
+        System.out.println("Enter 'q' if you want to quit without saving");
+        System.out.println("Enter 's' if you want to save your hub before quitting");
+        String ans = input.next();
+        if (ans.equals("q")) {
+            System.exit(0);
+        } else if (ans.equals("s")) {
+            interpretChoiceFive();
+        } else {
+            System.out.println("Invalid choice! Quitting...");
         }
     }
 
@@ -257,7 +276,8 @@ public class SecureMsgApp {
         System.out.println("Enter the user ID of the recipient.");
         Integer rid = input.nextInt();
         User recipient = readUserFromFile(rid);
-        loadRecipientHub(recipient);
+        String recipientFilePath = "./data/" + recipient.getUsername() + ".json";
+        loadRecipientHub(recipient,recipientFilePath);
         System.out.println("You have chosen to send a message to: " + recipient.getUsername() + ".");
         System.out.println("State the urgency level of this message (1. REGULAR, 2. URGENT, 3. EMERGENCY)");
         Integer ul = input.nextInt();
@@ -266,14 +286,44 @@ public class SecureMsgApp {
         String msgContents = input.next();
         Integer messageID = 0;
         sendMessageToRecipient(messageID, sender, recipient, msgContents, msgUrgency);
+        addMessageToRecipientJson(recipient, messageID, sender, msgContents, msgUrgency, recipientFilePath);
+        displayHubMenu();
 
     }
 
-    private void loadRecipientHub(User recipient) throws NoSuchPaddingException, NoSuchAlgorithmException {
+    private void addMessageToRecipientJson(User recipient,Integer messageID,
+                                           User sender, String msgContents, UrgencyLevel msgUrgency, String fp) {
+        jsonReader = new JsonReader(fp,JSON_USERINFO);
         try {
-            jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
-            pathForSpecificUser = "./data/" + recipient.getUsername() + ".json";
-            recipient.setHub(jsonReader.read(user.getUserID()));
+            JSONObject hubJson = jsonReader.returnJsonObject(pathForSpecificUser);
+            JSONArray messageFolderArray = hubJson.getJSONObject("Hub").getJSONArray("MessageFolder");
+            JSONObject msg = new JSONObject();
+            msg.put("SenderUserID",sender.getUserID());
+            msg.put("RecipientUserID",recipient.getUserID());
+            msg.put("MessageID",messageID);
+            msg.put("DecryptedMessageText",msgContents);
+            msg.put("Urgency Level",msgUrgency.toString());
+            messageFolderArray.put(msg);
+            hubJson.getJSONObject("Hub").put("MessageFolder", messageFolderArray);
+
+            jsonWriter = new JsonWriter(fp);
+            jsonWriter.open();
+            jsonWriter.writeHub(recipient.getUsername(), recipient.getUserID().toString(), recipient.getHub());
+            jsonWriter.close();
+
+        } catch (IOException e) {
+            System.out.println("Error! Unable to write to recipient file");
+        }
+
+
+    }
+
+    private void loadRecipientHub(User recipient, String fp) throws NoSuchPaddingException, NoSuchAlgorithmException {
+        try {
+            jsonReader = new JsonReader(fp,JSON_USERINFO);
+            Hub h = new Hub();
+            h = jsonReader.read(user.getUserID());
+            recipient.setHub(h);
             System.out.println("Loaded " + recipient.getUsername() + "'s Hub from" + pathForSpecificUser);
         } catch (IOException e) {
             System.out.println("Error! Unable to read from file: " + pathForSpecificUser);
@@ -293,6 +343,7 @@ public class SecureMsgApp {
         try {
             messageID = sender.getHub().sendMessage(sender, recipient, m, u);
             System.out.println("Message sent! The message ID is: " + messageID);
+            this.user = sender;
         } catch (UnsupportedEncodingException e) {
             System.err.println("Unexpected UnsupportedEncodingException!");
         } catch (IllegalBlockSizeException e) {
@@ -344,10 +395,16 @@ public class SecureMsgApp {
         ArrayList<String> contactList = user.getHub().getContactList();
         System.out.println("Enter the user ID of the user you would like to add to your emergency contact list:");
         Integer id = input.nextInt();
-        User userToAdd = userMap.getUser(id);
-        contactList.add(userToAdd.getUsername());
-        System.out.println("Added!");
-        displayHubMenu();
+        try {
+            JSONObject uj = jsonReader.returnJsonObject(JSON_USERINFO);
+            User userToAdd = jsonReader.getUserByID(id,uj);
+            contactList.add(userToAdd.getUsername());
+            System.out.println("Added!");
+            displayHubMenu();
+        } catch (IOException e) {
+            System.out.println("Error in finding the user!");
+        }
+
     }
 
 

@@ -16,9 +16,10 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.Base64;
-
-
 import static org.junit.jupiter.api.Assertions.*;
+
+// Some tests referenced from the JsonSerialization Demo
+// https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 
 public class JsonReaderTest {
     private User user1;
@@ -36,11 +37,12 @@ public class JsonReaderTest {
     @Test
     void testReaderNonExistentFile() {
         JsonReader reader = new JsonReader("./data/noSuchFile1.json","./data/noSuchFile2.json");
+        assertNotNull(reader);
         try {
             Hub h = reader.read(user1.getUserID());
             fail("IOException expected");
         } catch (IOException e) {
-            // pass
+            // This exception is expected
         } catch (NoSuchPaddingException e) {
             fail("Unexpected NoSuchPaddingException!");
         } catch (NoSuchAlgorithmException e) {
@@ -52,6 +54,7 @@ public class JsonReaderTest {
     void testReaderEmptyHub() {
         JsonReader reader = new JsonReader
                 ("./data/testReaderEmptyHub.json","./data/testReaderEmptyUserInfo.json");
+        assertNotNull(reader);
         try {
             Hub h = reader.read(user1.getUserID());
             assertEquals(h.getNote().getNumberOfNotes(),0);
@@ -71,6 +74,7 @@ public class JsonReaderTest {
     void testReaderGeneralHub() {
         JsonReader reader = new JsonReader
                 ("./data/testReaderGeneralHub.json","./data/testReaderGeneralUserInfo.json");
+        assertNotNull(reader);
         try {
             Hub h = reader.read(user1.getUserID());
             Note n = h.getNote();
@@ -115,29 +119,37 @@ public class JsonReaderTest {
 
         JsonReader reader = new JsonReader
                 ("./data/testReaderEmptyHub.json","./data/testReaderGeneralUserInfo.json");
+        assertNotNull(reader);
 
 
         try {
             JSONObject hubJsonObject = reader.returnJsonObject("./data/testReaderEmptyHub.json");
             JSONObject userJsonObject = reader.returnJsonObject("./data/testReaderGeneralUserInfo.json");
             JSONObject userJsonDataOriginalObject = reader.returnJsonObject("./data/userinfo.json");
+
             assertTrue(hubJsonObject instanceof JSONObject);
             assertTrue(userJsonObject instanceof JSONObject);
             assertTrue(userJsonDataOriginalObject instanceof JSONObject);
+
             User sender = reader.getUserByID(99432041,userJsonDataOriginalObject);
             User recipient = reader.getUserByID
                     (12345678,userJsonObject);
 
+            assertTrue(sender instanceof User);
+            assertTrue(recipient instanceof User);
 
             Message m = new Message(sender, recipient,"New Message!",UrgencyLevel.REGULAR);
+            assertNotNull(m);
             Hub h = reader.read(user1.getUserID());
+            assertNotNull(h);
             h.getMessageFolder().addNewMessage(m.getMessageID(),m);
 
             Hub hnew = new Hub();
 
-            // Mock JSON object for message folder
+
             JSONObject messageFolderJson = new JSONObject();
-            // Add sample message data to the message folder JSON object
+            assertTrue(messageFolderJson instanceof JSONObject);
+
             JSONArray messages = new JSONArray();
             JSONObject messageJson = new JSONObject();
             messageJson.put("SenderUserID", sender.getUserID());
@@ -178,13 +190,19 @@ public class JsonReaderTest {
     void testGetUserByID() {
         JsonReader reader = new JsonReader
                 ("./data/testReaderEmptyHub.json","./data/testReaderGeneralUserInfo.json");
+        assertNotNull(reader);
+        assertTrue(reader instanceof JsonReader);
         try {
             String userJsonData = reader.readFile("./data/testReaderGeneralUserInfo.json");
+            assertTrue(userJsonData instanceof String);
             JSONObject userJsonObject = new JSONObject(userJsonData);
             User u = reader.getUserByID(user1.getUserID(),userJsonObject);
+
+            assertTrue(u instanceof User);
             assertEquals(u.getUserID(),user1.getUserID());
             assertEquals(u.getUsername(),user1.getUsername());
             assertEquals(u.getPassword(),user1.getPassword());
+
         } catch (IOException e) {
             fail("Unexpected IOException!");
         }
@@ -195,10 +213,15 @@ public class JsonReaderTest {
     void testGetUserByIDDoesNotExist() {
         JsonReader reader = new JsonReader
                 ("./data/testReaderEmptyHub.json","./data/testReaderGeneralUserInfo.json");
+        assertNotNull(reader);
+        assertTrue(reader instanceof JsonReader);
         try {
             String userJsonData = reader.readFile("./data/testReaderGeneralUserInfo.json");
+            assertTrue(userJsonData instanceof String);
             JSONObject userJsonObject = new JSONObject(userJsonData);
+            assertTrue(userJsonObject instanceof JSONObject);
             User u = reader.getUserByID(00000000,userJsonObject);
+
             assertNull(u.getUsername());
             assertNull(u.getPassword());
         } catch (IOException e) {
@@ -213,10 +236,14 @@ public class JsonReaderTest {
         JsonReader reader = new JsonReader
                 ("./data/testReaderEmptyHub.json","./data/testReaderGeneralUserInfo.json");
 
-        String toConvert = "u/Gu5posvwDsXUnV5Zaq4g==";
+        assertNotNull(reader);
+        assertTrue(reader instanceof JsonReader);
+        String toConvert = "aGVsbG8gd29ybGQ=";
         SecretKey sk = reader.stringToSecretKey(toConvert);
+        assertTrue(sk instanceof SecretKey);
         byte[] encodedKey = sk.getEncoded();
         String result = Base64.getEncoder().encodeToString(encodedKey);
+
         assertEquals(result,toConvert);
         assertEquals("DES", sk.getAlgorithm());
     }

@@ -1,8 +1,5 @@
 package persistence;
 
-// Referenced from the JsonSerialization Demo
-// https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-
 import model.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +14,9 @@ import org.json.*;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
+// Referenced from the JsonSerialization Demo
+// https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 
 // Represents a reader that reads workroom from JSON data stored in file
 
