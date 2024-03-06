@@ -1,32 +1,42 @@
 {
-  "Hub": {
-    "Reminders": [
-      {
-        "reminderContent": "Reminder 2 for John",
-        "Date": "2024-02-26"
-      },
-      {
-        "reminderContent": "Reminder 1 for John",
-        "Date": "2024-02-25"
-      }
-    ],
-    "MessageFolder": [],
-    "ContactList": ["raj2410"],
-    "Notifications": [],
-    "Notes": [
-      {
-        "noteContent": "Note 10 for John",
-        "noteID": 10
-      },
-      {
-        "noteContent": "Note 12 for John",
-        "noteID": 12
-      },
-      {
-        "noteContent": "Hi, this is a new note!",
-        "noteID": 77
-      }
-    ]
-  },
-  "Username": "john_doe"
+    "Hub": {
+        "Reminders": [
+            {
+                "reminderContent": "Reminder 2 for John",
+                "Date": "2024-02-26"
+            },
+            {
+                "reminderContent": "Reminder 1 for John",
+                "Date": "2024-02-25"
+            }
+        ],
+        "MessageFolder": [{
+            "SenderUserID": 85019657,
+            "DecryptedMessageText": "hi!",
+            "SharedKey": "SpfQhl1JnTQ=",
+            "RecipientUserID": 99432042,
+            "MessageID": 880081605,
+            "Urgency Level": "REGULAR"
+        }],
+        "ContactList": ["raj2410"],
+        "Notifications": [{
+            "Message": "You have 1 new message of type: REGULAR",
+            "UrgencyLevel": "REGULAR"
+        }],
+        "Notes": [
+            {
+                "noteContent": "Note 10 for John",
+                "noteID": 10
+            },
+            {
+                "noteContent": "Note 12 for John",
+                "noteID": 12
+            },
+            {
+                "noteContent": "Hi, this is a new note!",
+                "noteID": 77
+            }
+        ]
+    },
+    "Username": "john_doe"
 }

@@ -116,6 +116,8 @@ public class Message extends Encryption implements Writable {
         return generatedID;
     }
 
+
+    //EFFECTS: returns a message as a JSON Object
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -130,6 +132,7 @@ public class Message extends Encryption implements Writable {
         return json;
     }
 
+    //EFFECTS: encodes the secret key to a String
     public String secretKeyToString(SecretKey sharedKey) {
         byte[] encodedKey = sharedKey.getEncoded();
         return Base64.getEncoder().encodeToString(encodedKey);

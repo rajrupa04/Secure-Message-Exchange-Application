@@ -14,7 +14,7 @@ public class Reminder {
     private HashMap<LocalDate,String> reminders;
 
     //REQUIRES: none
-    //MODIFIES: none
+    //MODIFIES: this
     //EFFECTS: constructs a new set of reminders as an empty hashmap
     public Reminder() {
         reminders = new HashMap<>();
@@ -71,6 +71,7 @@ public class Reminder {
 
 
 
+    //EFFECTS: returns the reminders as a Json Array
     public JSONArray toJson() {
         JSONArray json = new JSONArray();
         for (LocalDate date : reminders.keySet()) {

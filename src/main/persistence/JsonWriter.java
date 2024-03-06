@@ -37,6 +37,7 @@ public class JsonWriter {
         writerAppend = new PrintWriter(new FileWriter(destination,true));
     }
 
+    // EFFECTS: returns the writerAppend object
     public PrintWriter getWriterAppend() {
         return this.writerAppend;
     }
@@ -92,6 +93,8 @@ public class JsonWriter {
         writer.print(json);
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the writerAppend field to the provided PrintWriter object
     public void setWriterAppend(PrintWriter p) {
         this.writerAppend = p;
     }

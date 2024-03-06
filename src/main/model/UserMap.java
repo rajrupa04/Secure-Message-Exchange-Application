@@ -47,6 +47,8 @@ public class UserMap {
         return userMap;
     }
 
+
+    //EFFECTS: converts the userMap to a Json Object
     public JSONObject toJson() {
         JSONObject userMapJson = new JSONObject();
         for (Integer userID : userMap.keySet()) {

@@ -70,6 +70,7 @@ public class SecureMsgApp {
 
     }
 
+    //EFFECTS: runs the methods corresponding to displaying the information in the Hub, and the menu
     private void hubOrQuit() {
         Hub userHub = user.getHub();
         displayHub(userHub);
@@ -96,6 +97,7 @@ public class SecureMsgApp {
         }
     }
 
+    //EFFECTS: returns the user corresponding to the given UserID from the JSON_USERINFO file
     private User readUserFromFile(Integer id) {
         try {
             JSONObject userJsonObject = jsonReader.returnJsonObject(JSON_USERINFO);
@@ -126,6 +128,7 @@ public class SecureMsgApp {
         addNewUserToFile(user);
     }
 
+    //EFFECTS: Adds a new user to the JSON_USERINFO file
     private void addNewUserToFile(User u) {
         try {
             jsonWriterUserInfo.openInAppendMode();
@@ -173,6 +176,8 @@ public class SecureMsgApp {
 
     }
 
+    //EFFECTS: loads the Hub corresponding to the specific user's username from their specific hub file, throws
+    //IOException if error occurs in loading hub
     private void loadHubFromFile(String username) throws NoSuchPaddingException, NoSuchAlgorithmException {
         try {
             pathForSpecificUser = "./data/" + username + ".json";
@@ -235,6 +240,7 @@ public class SecureMsgApp {
         }
     }
 
+    //EFFECTS: Gives the option to the user to either quit without saving, or to save their progress before quitting
     private void interpretChoiceSix() {
         System.out.println("Are you sure you want to quit? Your hub is not saved!");
         System.out.println("Enter 'q' if you want to quit without saving");
@@ -249,6 +255,8 @@ public class SecureMsgApp {
         }
     }
 
+    //EFFECTS: Saves the user's hub to the file, saving any changes made. Throws FileNotFoundException if file not
+    //found, otherwise IOException thrown if error occurs in writing
     private void interpretChoiceFive() {
         try {
             if (user != null && user.getUsername() != null) {
@@ -269,7 +277,6 @@ public class SecureMsgApp {
 
 
     //EFFECTS: sends an encrypted message of a certain urgency level and content to the specified recipient
-
     private void interpretChoiceFour() throws NoSuchPaddingException, NoSuchAlgorithmException {
         System.out.println("You have chosen to send a message to an existing user.");
         User sender = this.user;
@@ -291,6 +298,8 @@ public class SecureMsgApp {
 
     }
 
+    //EFFECTS: adds the received message to the recipient's JSON file, throws IOException if error occurs in
+    //reading the file
     private void addMessageToRecipientJson(User recipient,Integer messageID,
                                            User sender, String msgContents, UrgencyLevel msgUrgency, String fp) {
         jsonReader = new JsonReader(fp,JSON_USERINFO);
@@ -318,6 +327,8 @@ public class SecureMsgApp {
 
     }
 
+    //EFFECTS: loads the recipient's hub from their specific hub file, throws IOException if error occurs in
+    //reading the file
     private void loadRecipientHub(User recipient, String fp) throws NoSuchPaddingException, NoSuchAlgorithmException {
         try {
             jsonReader = new JsonReader(fp,JSON_USERINFO);
@@ -331,6 +342,8 @@ public class SecureMsgApp {
 
     }
 
+    //EFFECTS: sends the message from the sender's hub to the recipient, printing appropriate messages if either hubs
+    //are null. Prints out the messageID once sent.
     private void sendMessageToRecipient(Integer messageID, User sender, User recipient, String m, UrgencyLevel u) {
         if (sender.getHub() == null) {
             System.err.println("Sender or sender's hub is not properly initialized.");
@@ -389,7 +402,8 @@ public class SecureMsgApp {
     }
 
 
-    //EFFECTS: adds a user to the user's emergency contact list
+    //EFFECTS: adds a user to the user's emergency contact list, throws IOException if error occurs in
+    //reading the file
     private void interpretChoiceThree() {
         System.out.println("You have chosen to add an existing user to your emergency contact list.");
         ArrayList<String> contactList = user.getHub().getContactList();
@@ -442,8 +456,9 @@ public class SecureMsgApp {
         displayHubNotes(userHub);
         displayHubReminders(userHub);
         displayHubContacts(userHub);
-        displayHubMessageFolder(userHub);
         displayHubNotifications(userHub);
+        displayHubMessageFolder(userHub);
+
     }
 
 
@@ -473,24 +488,45 @@ public class SecureMsgApp {
             System.out.println("You do not have any messages in your folder yet.");
         } else {
             System.out.println("You have " + userMsgFolder.getMessageFolder().size() + " new messages!");
+            System.out.println("Enter 'v' to view your messages now, or 'c' to continue to your actions.");
+            String ans = input.next();
+            if (ans.equals("v")) {
+                displayMessages("./data/" + user.getUsername() + ".json");
+            } else if (ans.equals("c")) {
+                //pass
+            }
         }
     }
 
-
-    //EFFECTS: displays the message corresponding to the message ID.
-    private void displayMessage(Hub userHub, Integer i) {
+    //EFFECTS: displays the user's individual messages from their message folder, throws IOException if error occurs in
+    //reading the file
+    private void displayMessages(String filepath) {
+        JsonReader reader = new JsonReader("./data/" + user.getUsername() + ".json",JSON_USERINFO);
         try {
-            String decryptedMsg = userHub.receiveMessage(user, i);
-            System.out.println(decryptedMsg);
-        } catch (NoSuchPaddingException e) {
-            System.err.println("Unexpected NoSuchPaddingException");
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println("Unexpected NoSuchAlgorithmException");
+            JSONObject j = reader.returnJsonObject(filepath);
+            JSONObject userJsonObject = reader.returnJsonObject(JSON_USERINFO);
+            JSONArray messageFolder = j.getJSONObject("Hub").getJSONArray("MessageFolder");
+            for (int i = 0; i < messageFolder.length(); i++) {
+                JSONObject messageObj = messageFolder.getJSONObject(i);
+                int messageID = messageObj.getInt("MessageID");
+                String decryptedMessageText = messageObj.getString("DecryptedMessageText");
+                UrgencyLevel urgencyLevel = UrgencyLevel.valueOf(messageObj.getString("Urgency Level"));
+                User sender = reader.getUserByID(messageObj.getInt("SenderUserID"),userJsonObject);
+                User recipient = reader.getUserByID(messageObj.getInt("RecipientUserID"),userJsonObject);
+                System.out.println("Message ID: " + messageID);
+                System.out.println("Sender: " + sender.getUsername());
+                System.out.println("Recipient: " + recipient.getUsername());
+                System.out.println("Urgency Level: " + urgencyLevel.toString());
+                System.out.println("Message content: " + decryptedMessageText);
+                System.out.println();
+
+            }
+        } catch (IOException e) {
+            System.out.println("Error fetching messages!");
         }
 
 
     }
-
 
     //EFFECTS: displays the user's emergency contact list, printing a special message if they don't have any
     private void displayHubContacts(Hub userHub) {

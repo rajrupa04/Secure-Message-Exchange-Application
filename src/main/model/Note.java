@@ -58,6 +58,7 @@ public class Note {
     }
 
 
+    //EFFECTS: returns the notes as a Json Array
     public JSONArray toJson() {
         JSONArray json = new JSONArray();
         for (Integer noteID : listOfNotes.keySet()) {

@@ -101,6 +101,7 @@ public class Hub implements Writable {
     }
 
 
+    // EFFECTS: returns the hub as JSON object
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -112,6 +113,7 @@ public class Hub implements Writable {
         return json;
     }
 
+    // EFFECTS: returns the contact list in the hub as a JSON Array
     private JSONArray addContactListToJson(ArrayList<String> c) {
         JSONArray json = new JSONArray();
         for (String element : c) {

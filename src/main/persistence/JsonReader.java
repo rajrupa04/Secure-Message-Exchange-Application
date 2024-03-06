@@ -43,6 +43,7 @@ public class JsonReader {
         return parseHub(hubJsonObject, userJsonObject, userID);
     }
 
+    // EFFECTS: returns the JSONObject corresponding to the string filepath
     public static JSONObject returnJsonObject(String s) throws IOException {
         String data = readFile(s);
         JSONObject j = new JSONObject(data);

@@ -56,21 +56,27 @@ public class User implements Writable {
         return this.username;
     }
 
+    //MODIFIES: this
+    //EFFECTS: sets the user's username
     public void setUsername(String s) {
         this.username = s;
     }
 
+    //MODIFIES: this
+    //EFFECTS: sets the user's password
     public void setPassword(String s) {
         this.password = s;
     }
 
+    //MODIFIES: this
+    //EFFECTS: sets the user's userID
     public void setUserID(Integer i) {
         this.userID = i;
     }
 
     //REQUIRES: none
     //MODIFIES: none
-    //EFFECTS: returns the password of the currenrt user
+    //EFFECTS: returns the password of the current user
     public String getPassword() {
         return this.password;
     }
@@ -100,6 +106,7 @@ public class User implements Writable {
     }
 
 
+    //EFFECTS: creates and returns a Json Object containing the user ID and hub
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -108,6 +115,7 @@ public class User implements Writable {
         return json;
     }
 
+    //EFFECTS: creates and returns a Json Object containing the user ID, username, password
     public JSONObject addUserToJson() {
         JSONObject json = new JSONObject();
         json.put("UserID",userID);

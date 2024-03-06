@@ -51,6 +51,7 @@ public class MessageFolder {
     }
 
 
+    //EFFECTS: returns the message folder as a Json array
     public JSONArray toJson() {
         JSONArray json = new JSONArray();
         for (Integer messageID : messageFolder.keySet()) {

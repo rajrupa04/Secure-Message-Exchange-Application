@@ -12,6 +12,8 @@ import java.util.HashMap;
 public class Notification {
     private HashMap<UrgencyLevel,String> notifications;
 
+    //MODIFIES: this
+    //EFFECTS: constructs a new notification object as an empty hashmap
     public Notification() {
         notifications = new HashMap<>();
     }
@@ -65,6 +67,8 @@ public class Notification {
         return this.notifications;
     }
 
+
+    //EFFECTS: returns the notifications as a Json Array
     public JSONArray toJson() {
         JSONArray json = new JSONArray();
         for (UrgencyLevel u : notifications.keySet()) {
