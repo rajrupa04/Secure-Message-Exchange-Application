@@ -103,7 +103,6 @@ public class JsonReader {
         Integer recipientUserID = jsonObject.getInt("RecipientUserID");
         Integer messageID = jsonObject.getInt("MessageID");
         String decryptedMessageText = jsonObject.getString("DecryptedMessageText");
-        String encryptedMessageText = jsonObject.getString("EncryptedMessageText");
         String urgency = jsonObject.getString("Urgency Level");
         String secretKey = jsonObject.getString("SharedKey");
         User sender = getUserByID(senderUserID, userJsonObject);

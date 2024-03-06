@@ -123,7 +123,7 @@ public class Message extends Encryption implements Writable {
         JSONObject json = new JSONObject();
         json.put("SenderUserID",sender.getUserID());
         json.put("RecipientUserID",recipient.getUserID());
-        json.put("MessageID",messageID);
+        json.put("MessageID",this.getMessageID());
         json.put("DecryptedMessageText",decryptedMessageText);
         json.put("EncryptedMessageText",encryptedMessageText);
         json.put("Urgency Level",urgencyLevel.toString());

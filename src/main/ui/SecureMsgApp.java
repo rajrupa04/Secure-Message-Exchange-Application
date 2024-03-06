@@ -292,7 +292,7 @@ public class SecureMsgApp {
         System.out.println("Enter the contents of the message you'd like to send.");
         String msgContents = input.next();
         Integer messageID = 0;
-        sendMessageToRecipient(messageID, sender, recipient, msgContents, msgUrgency);
+        messageID = sendMessageToRecipient(messageID, sender, recipient, msgContents, msgUrgency);
         addMessageToRecipientJson(recipient, messageID, sender, msgContents, msgUrgency, recipientFilePath);
         displayHubMenu();
 
@@ -317,7 +317,8 @@ public class SecureMsgApp {
 
             jsonWriter = new JsonWriter(fp);
             jsonWriter.open();
-            jsonWriter.writeHub(recipient.getUsername(), recipient.getUserID().toString(), recipient.getHub());
+            jsonWriter.writeHub(recipient.getUsername(),
+                    recipient.getUserID().toString(), recipient.getHub());
             jsonWriter.close();
 
         } catch (IOException e) {
@@ -344,14 +345,7 @@ public class SecureMsgApp {
 
     //EFFECTS: sends the message from the sender's hub to the recipient, printing appropriate messages if either hubs
     //are null. Prints out the messageID once sent.
-    private void sendMessageToRecipient(Integer messageID, User sender, User recipient, String m, UrgencyLevel u) {
-        if (sender.getHub() == null) {
-            System.err.println("Sender or sender's hub is not properly initialized.");
-        }
-
-        if (recipient.getHub() == null) {
-            System.err.println("Recipient user is null.");
-        }
+    private Integer sendMessageToRecipient(Integer messageID, User sender, User recipient, String m, UrgencyLevel u) {
 
         try {
             messageID = sender.getHub().sendMessage(sender, recipient, m, u);
@@ -370,6 +364,7 @@ public class SecureMsgApp {
         } catch (NoSuchAlgorithmException e) {
             System.err.println("Unexpected NoSuchAlgorithmException!");
         }
+        return messageID;
     }
 
 

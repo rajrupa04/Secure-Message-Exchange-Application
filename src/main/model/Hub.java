@@ -114,7 +114,7 @@ public class Hub implements Writable {
     }
 
     // EFFECTS: returns the contact list in the hub as a JSON Array
-    private JSONArray addContactListToJson(ArrayList<String> c) {
+    public JSONArray addContactListToJson(ArrayList<String> c) {
         JSONArray json = new JSONArray();
         for (String element : c) {
             json.put(element);

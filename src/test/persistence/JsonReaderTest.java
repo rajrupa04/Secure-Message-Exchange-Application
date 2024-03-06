@@ -187,6 +187,77 @@ public class JsonReaderTest {
     }
 
     @Test
+    void addSingleMessageTest() {
+        JsonReader reader = new JsonReader
+                ("./data/testReaderEmptyHub.json","./data/testReaderGeneralUserInfo.json");
+        assertNotNull(reader);
+
+
+        try {
+            JSONObject hubJsonObject = reader.returnJsonObject("./data/testReaderEmptyHub.json");
+            JSONObject userJsonObject = reader.returnJsonObject("./data/testReaderGeneralUserInfo.json");
+            JSONObject userJsonDataOriginalObject = reader.returnJsonObject("./data/userinfo.json");
+
+            assertTrue(hubJsonObject instanceof JSONObject);
+            assertTrue(userJsonObject instanceof JSONObject);
+            assertTrue(userJsonDataOriginalObject instanceof JSONObject);
+
+            User sender = reader.getUserByID(99432041,userJsonDataOriginalObject);
+            User recipient = reader.getUserByID
+                    (12345678,userJsonObject);
+
+            assertTrue(sender instanceof User);
+            assertTrue(recipient instanceof User);
+
+            Message m = new Message(sender, recipient,"New Message!",UrgencyLevel.REGULAR);
+            assertNotNull(m);
+            Hub h = reader.read(user1.getUserID());
+            assertNotNull(h);
+            h.getMessageFolder().addNewMessage(m.getMessageID(),m);
+
+            Hub hnew = new Hub();
+
+
+            JSONObject messageFolderJson = new JSONObject();
+            assertTrue(messageFolderJson instanceof JSONObject);
+
+            JSONArray messages = new JSONArray();
+            JSONObject messageJson = new JSONObject();
+            messageJson.put("SenderUserID", sender.getUserID());
+            messageJson.put("RecipientUserID", recipient.getUserID());
+            messageJson.put("MessageID", m.getMessageID());
+            messageJson.put("DecryptedMessageText", "New Message!");
+            messageJson.put("EncryptedMessageText", m.encryptMessage("New Message!",m.getSharedKey()));
+            messageJson.put("Urgency Level", m.getUrgencyLevel().toString());
+            messageJson.put("SharedKey", Base64.getEncoder().encodeToString(m.getSharedKey().toString().getBytes()));
+            messages.put(messageJson);
+            messageFolderJson.put("MessageFolder", messages);
+
+            reader.addSingleMessage(hnew,messageJson,userJsonObject);
+            assertNotNull(hnew.getMessageFolder().getMessageByID(m.getMessageID()));
+            assertEquals(hnew.getMessageFolder().getMessageByID(m.getMessageID()).decryptMessage
+                    (m.encryptMessage("New Message!",m.getSharedKey())
+                            ,m.getSharedKey()),"New Message!");
+
+
+        } catch (IOException e) {
+            fail("Couldn't read from file" + e.getMessage());
+        } catch (NoSuchPaddingException e) {
+            fail("Unexpected NoSuchPaddingException!");
+        } catch (NoSuchAlgorithmException e) {
+            fail("Unexpected NoSuchAlgorithmException!");
+        } catch (IllegalBlockSizeException e) {
+            fail("Unexpected IllegalBlockSizeException!");
+        } catch (BadPaddingException e) {
+            fail("Unexpected BadPaddingException!");
+        } catch (InvalidKeyException e) {
+            fail("Unexpected InvalidKeyException!");
+        }
+
+
+    }
+
+    @Test
     void testGetUserByID() {
         JsonReader reader = new JsonReader
                 ("./data/testReaderEmptyHub.json","./data/testReaderGeneralUserInfo.json");
