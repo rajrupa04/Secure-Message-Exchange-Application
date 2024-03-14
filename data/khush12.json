@@ -1,10 +1,16 @@
 {
-  "Hub": {
-    "Reminders": [],
-    "MessageFolder": [],
-    "ContactList": [],
-    "Notes": [],
-    "Notifications": []
-  },
-  "Username": "khush12"
+    "Hub": {
+        "Reminders": [{
+            "reminderContent": "hey!!!",
+            "Date": "2024-11-11"
+        }],
+        "MessageFolder": [],
+        "ContactList": ["john_doe"],
+        "Notifications": [],
+        "Notes": [{
+            "noteContent": "Note 99",
+            "noteID": 99
+        }]
+    },
+    "Username": "khush12"
 }
