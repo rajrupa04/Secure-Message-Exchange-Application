@@ -22,31 +22,52 @@ public class MainAppUI {
         boolean isNewUser = showNewUserDialog();
 
         if (isNewUser) {
-            JOptionPane.showMessageDialog(frame, "Welcome, new user!");
-            //TO ADD
+            loginForNewUser();
+
         } else {
+            loginForExistingUser();
 
-            LoginPanelExistingUser loginPanel = new LoginPanelExistingUser(frame);
-            JInternalFrame internalFrame = new JInternalFrame("Login Panel", false, true,
-                    true, true);
-            frame.getContentPane().add(loginPanel);
-            internalFrame.add(loginPanel);
-            internalFrame.setSize(WIDTH,HEIGHT);
-            internalFrame.setVisible(true);
-            desktop.add(internalFrame);
-
-
-            frame.getContentPane().add(desktop);
-
-
-            frame.pack();
-            frame.setVisible(true);
         }
 
         frame.pack();
         frame.setVisible(true);
     }
 
+    private void loginForExistingUser() {
+        LoginPanelExistingUser loginPanel = new LoginPanelExistingUser(frame);
+        JInternalFrame internalFrame = new JInternalFrame("Login Panel", false, true,
+                true, true);
+        frame.getContentPane().add(loginPanel);
+        internalFrame.add(loginPanel);
+        internalFrame.setSize(WIDTH,HEIGHT);
+        internalFrame.setVisible(true);
+        desktop.add(internalFrame);
+
+
+        frame.getContentPane().add(desktop);
+
+
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    private void loginForNewUser() {
+        LoginPanelNewUser lp = new LoginPanelNewUser(frame);
+        JInternalFrame internalFrame = new JInternalFrame("Login Panel", false, true,
+                true, true);
+        frame.getContentPane().add(lp);
+        internalFrame.add(lp);
+        internalFrame.setSize(WIDTH,HEIGHT);
+        internalFrame.setVisible(true);
+        desktop.add(internalFrame);
+
+
+        frame.getContentPane().add(desktop);
+
+
+        frame.pack();
+        frame.setVisible(true);
+    }
 
 
     private boolean showNewUserDialog() {
