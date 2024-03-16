@@ -18,7 +18,7 @@ import javax.crypto.spec.SecretKeySpec;
 // Referenced from the JsonSerialization Demo
 // https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 
-// Represents a reader that reads workroom from JSON data stored in file
+// Represents a reader that reads hub from JSON data stored in file
 
 public class JsonReader {
     private String hubSource;

@@ -16,7 +16,6 @@ public class LoginPanelExistingUser extends JPanel {
     private JPasswordField passwordField;
     private JTextField userIDField;
     private JButton loginButton;
-    private JFrame frame;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
     private JsonWriter jsonWriterUserInfo;
@@ -24,8 +23,7 @@ public class LoginPanelExistingUser extends JPanel {
     private static final String JSON_USERINFO = "./data/userinfo.json";
     private User user;
 
-    public LoginPanelExistingUser(JFrame frame) {
-        this.frame = frame;
+    public LoginPanelExistingUser() {
         initComponents();
         setupLayout();
         initJson();
@@ -36,6 +34,12 @@ public class LoginPanelExistingUser extends JPanel {
         jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
     }
 
+    public String getUsername() {
+
+        return usernameField.getText();
+
+    }
+
     private void initComponents() {
         JLabel textLabel = new JLabel("Welcome back!");
         usernameField = new JTextField(20);
@@ -44,6 +48,7 @@ public class LoginPanelExistingUser extends JPanel {
         loginButton = new JButton("Login");
 
         addActionListenerForLoginButton();
+
     }
 
     private void addActionListenerForLoginButton() {
@@ -55,14 +60,33 @@ public class LoginPanelExistingUser extends JPanel {
                 String userID = userIDField.getText();
                 boolean loginSuccess = checkLogin(username, password, userID);
                 if (loginSuccess) {
-                    frame.setVisible(true);
                     JOptionPane.showMessageDialog(null, "Login Successful!");
                 } else {
-                    frame.setVisible(true);
                     JOptionPane.showMessageDialog(null, "Invalid Login!");
                 }
+                generateNewHubForExistingUser();
+                setVisible(false);
+
             }
         });
+
+    }
+
+    private void generateNewHubForExistingUser() {
+        HubUI hexisting = new HubUI(true, user);
+        JInternalFrame internalFrame = new JInternalFrame("Hub UI", true, true, true,
+                true);
+        internalFrame.add(hexisting);
+        internalFrame.setSize(400,500);
+        internalFrame.pack();
+        internalFrame.setVisible(true);
+        JDesktopPane desktopPane = (JDesktopPane) SwingUtilities.getAncestorOfClass(JDesktopPane.class, this);
+        if (desktopPane != null) {
+            desktopPane.add(internalFrame);
+        } else {
+            JOptionPane.showMessageDialog(null, "Error: Unable to access Desktop Pane!");
+        }
+
     }
 
     private void setupLayout() {
@@ -90,15 +114,19 @@ public class LoginPanelExistingUser extends JPanel {
         }
     }
 
-    private User readUserFromFile(Integer id) {
+    public User readUserFromFile(Integer id) {
         try {
             JSONObject userJsonObject = jsonReader.returnJsonObject(JSON_USERINFO);
             User u = jsonReader.getUserByID(id, userJsonObject);
             return u;
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(frame, "Error reading from file!");
+            JOptionPane.showMessageDialog(null, "Error reading from file!");
         }
         return null;
+    }
+
+    public User returnUser() {
+        return user;
     }
 
 }

@@ -1,32 +1,33 @@
 package ui;
 
+import model.*;
+
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MainAppUI {
+public class MainAppUI extends JPanel {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;
     private static JFrame frame;
     private JDesktopPane desktop;
+    private String username;
+    private User user;
 
     public MainAppUI() {
         frame = new JFrame("Secure Hub Login");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
 
-
         desktop = new JDesktopPane();
-        desktop.addMouseListener(new DesktopFocusAction());
+        frame.add(desktop);
 
         boolean isNewUser = showNewUserDialog();
 
         if (isNewUser) {
             loginForNewUser();
-
         } else {
             loginForExistingUser();
-
         }
 
         frame.pack();
@@ -34,53 +35,30 @@ public class MainAppUI {
     }
 
     private void loginForExistingUser() {
-        LoginPanelExistingUser loginPanel = new LoginPanelExistingUser(frame);
-        JInternalFrame internalFrame = new JInternalFrame("Login Panel", false, true,
-                true, true);
-        frame.getContentPane().add(loginPanel);
-        internalFrame.add(loginPanel);
-        internalFrame.setSize(WIDTH,HEIGHT);
-        internalFrame.setVisible(true);
+        LoginPanelExistingUser loginPanel = new LoginPanelExistingUser();
+        JInternalFrame internalFrame = createInternalFrame("Login Panel", loginPanel);
+        user = loginPanel.returnUser();
         desktop.add(internalFrame);
-
-
-        frame.getContentPane().add(desktop);
-
-
-        frame.pack();
-        frame.setVisible(true);
     }
 
     private void loginForNewUser() {
-        LoginPanelNewUser lp = new LoginPanelNewUser(frame);
-        JInternalFrame internalFrame = new JInternalFrame("Login Panel", false, true,
-                true, true);
-        frame.getContentPane().add(lp);
-        internalFrame.add(lp);
-        internalFrame.setSize(WIDTH,HEIGHT);
-        internalFrame.setVisible(true);
+        LoginPanelNewUser loginPanel = new LoginPanelNewUser(frame);
+        JInternalFrame internalFrame = createInternalFrame("Login Panel", loginPanel);
         desktop.add(internalFrame);
-
-
-        frame.getContentPane().add(desktop);
-
-
-        frame.pack();
-        frame.setVisible(true);
     }
 
+    private JInternalFrame createInternalFrame(String title, JPanel panel) {
+        JInternalFrame internalFrame = new JInternalFrame(title, false, true, true, true);
+        internalFrame.getContentPane().add(panel);
+        internalFrame.setSize(WIDTH, HEIGHT);
+        internalFrame.setVisible(true);
+        return internalFrame;
+    }
 
     private boolean showNewUserDialog() {
         int option = JOptionPane.showConfirmDialog(frame, "Welcome! Are you a new user?",
                 "Secure Hub Login", JOptionPane.YES_NO_OPTION);
         return option == JOptionPane.YES_OPTION;
-    }
-
-    private class DesktopFocusAction extends MouseAdapter {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            MainAppUI.frame.requestFocusInWindow();
-        }
     }
 
     public static void main(String[] args) {
