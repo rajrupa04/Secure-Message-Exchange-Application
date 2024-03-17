@@ -20,6 +20,7 @@ public class NotesUI extends JPanel {
     private JButton searchButton;
     private JButton viewAllButton;
     private JButton addButton;
+    private JButton deleteButton;
     private JTextField searchField;
     private Note userNotes;
 
@@ -53,11 +54,66 @@ public class NotesUI extends JPanel {
         searchImplementation();
         viewAllImplementation();
         addNoteImplementation();
+        deleteNoteImplementation();
 
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(viewAllButton);
         buttonsPanel.add(addButton);
+        buttonsPanel.add(deleteButton);
         add(buttonsPanel, BorderLayout.SOUTH);
+    }
+
+    private void deleteNoteImplementation() {
+        deleteButton = new JButton("Delete Existing Note");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteExistingNote();
+            }
+        });
+    }
+
+    private void deleteExistingNote() {
+        JDialog deleteDialog = new JDialog(frame, "Delete Existing Note");
+        JPanel panel = new JPanel(new GridLayout(3, 2));
+        JTextField noteIDField = new JTextField("Note ID of note to be deleted", 20);
+
+        deleteDialog.add(noteIDField);
+        JButton deleteInDialog = new JButton("Delete");
+        deleteDialog.add(deleteInDialog);
+        addActionListenerToDeleteDialog(deleteDialog, noteIDField, deleteInDialog);
+
+        panel.add(new JLabel("Note ID of note to be deleted:"));
+        panel.add(noteIDField);
+        panel.add(new JLabel());
+        panel.add(deleteInDialog);
+
+        deleteDialog.add(panel);
+        deleteDialog.pack();
+        deleteDialog.setLocationRelativeTo(null);
+        deleteDialog.setVisible(true);
+    }
+
+    private void addActionListenerToDeleteDialog(JDialog deleteDialog, JTextField noteIDField, JButton deleteInDialog) {
+        deleteInDialog.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Integer noteID = Integer.parseInt(noteIDField.getText());
+                userNotes.removeNote(noteID);
+                DefaultTableModel tableModel = (DefaultTableModel) notesTable.getModel();
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    if (Integer.parseInt(tableModel.getValueAt(i, 0).toString()) == noteID) {
+                        tableModel.removeRow(i);
+                        break;
+                    }
+                }
+
+
+                deleteDialog.dispose();
+                viewAllNotes();
+            }
+        });
+
     }
 
     private void addNoteImplementation() {

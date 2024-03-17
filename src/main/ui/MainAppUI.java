@@ -11,7 +11,6 @@ public class MainAppUI extends JPanel {
     private static final int HEIGHT = 600;
     private static JFrame frame;
     private JDesktopPane desktop;
-    private String username;
     private User user;
 
     public MainAppUI() {
@@ -48,7 +47,8 @@ public class MainAppUI extends JPanel {
     }
 
     private JInternalFrame createInternalFrame(String title, JPanel panel) {
-        JInternalFrame internalFrame = new JInternalFrame(title, false, true, true, true);
+        JInternalFrame internalFrame = new JInternalFrame(title, false, true, true,
+                true);
         internalFrame.getContentPane().add(panel);
         internalFrame.setSize(WIDTH, HEIGHT);
         internalFrame.setVisible(true);

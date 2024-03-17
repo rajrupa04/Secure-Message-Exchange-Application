@@ -64,7 +64,7 @@ public class LoginPanelExistingUser extends JPanel {
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid Login!");
                 }
-                generateNewHubForExistingUser();
+                generateHubForExistingUser();
                 setVisible(false);
 
             }
@@ -72,7 +72,7 @@ public class LoginPanelExistingUser extends JPanel {
 
     }
 
-    private void generateNewHubForExistingUser() {
+    private void generateHubForExistingUser() {
         HubUI hexisting = new HubUI(true, user);
         JInternalFrame internalFrame = new JInternalFrame("Hub UI", true, true, true,
                 true);

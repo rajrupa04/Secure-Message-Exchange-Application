@@ -73,9 +73,27 @@ public class LoginPanelNewUser extends JPanel {
                                 " your user ID is: " + userID);
                 pathForSpecificUser = "./data/" + username + ".json";
                 addNewUserToFile();
+                generateHubForNewUser();
+                setVisible(false);
 
             }
         });
+    }
+
+    private void generateHubForNewUser() {
+        HubUI hexisting = new HubUI(false, user);
+        JInternalFrame internalFrame = new JInternalFrame("Hub UI", true, true, true,
+                true);
+        internalFrame.add(hexisting);
+        internalFrame.setSize(400,500);
+        internalFrame.pack();
+        internalFrame.setVisible(true);
+        JDesktopPane desktopPane = (JDesktopPane) SwingUtilities.getAncestorOfClass(JDesktopPane.class, this);
+        if (desktopPane != null) {
+            desktopPane.add(internalFrame);
+        } else {
+            JOptionPane.showMessageDialog(null, "Error: Unable to access Desktop Pane!");
+        }
     }
 
     private void addNewUserToFile() {

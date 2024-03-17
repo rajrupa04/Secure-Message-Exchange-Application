@@ -56,6 +56,7 @@ public class HubUI extends JPanel {
                     "Secure Hub Login", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
                 loadHubFromFile(user);
+                hubTabs.setVisible(true);
             } else {
                 generateNewHub(user);
                 JOptionPane.showMessageDialog(null,
@@ -64,6 +65,12 @@ public class HubUI extends JPanel {
             
 
 
+        } else if (!isExistingUser) {
+            hubTabs = new JTabbedPane();
+            hubTabs.setVisible(true);
+            generateNewHub(user);
+            JOptionPane.showMessageDialog(null,
+                    "Your new empty Hub has been generated!");
         }
 
 
