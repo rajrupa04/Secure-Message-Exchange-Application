@@ -18,7 +18,6 @@ public class RemindersUI extends JPanel {
     private JButton searchButton;
     private JButton viewAllButton;
     private JButton addButton;
-    private JButton editReminder;
     private JTextField searchField;
     private Reminder userReminders;
 

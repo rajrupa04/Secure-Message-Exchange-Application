@@ -8,10 +8,17 @@
             {
                 "reminderContent": "Reminder 1 for John",
                 "Date": "2024-02-25"
+            },
+            {
+                "reminderContent": "Wake me up when september ends",
+                "Date": "2024-10-01"
             }
         ],
         "MessageFolder": [],
-        "ContactList": ["raj2410"],
+        "ContactList": [
+            "raj2410",
+            "khush12"
+        ],
         "Notifications": [],
         "Notes": [
             {

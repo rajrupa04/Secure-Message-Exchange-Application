@@ -8,6 +8,9 @@ import persistence.JsonWriter;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
@@ -15,6 +18,7 @@ public class HubUI extends JPanel {
     private JTabbedPane hubTabs;
     private NotesUI notes;
     private RemindersUI reminders;
+    private ContactListUI contactList;
 
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
@@ -22,6 +26,7 @@ public class HubUI extends JPanel {
     private String pathForSpecificUser;
     private static final String JSON_USERINFO = "./data/userinfo.json";
     private User user;
+    private JPanel savePanel;
     private String username;
 
     public HubUI(Boolean isExistingUser, User user) {
@@ -41,8 +46,40 @@ public class HubUI extends JPanel {
     private void setupLayout() {
         setLayout(new BorderLayout());
         add(hubTabs, BorderLayout.CENTER);
+        savePanel = new JPanel();
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                saveHubToFile();
+            }
+        });
 
+        savePanel.add(saveButton);
+        add(savePanel, BorderLayout.SOUTH);
 
+    }
+
+    private void saveHubToFile() {
+        try {
+            if (user != null && user.getUsername() != null) {
+                jsonWriter = new JsonWriter(pathForSpecificUser);
+                jsonWriter.open();
+                jsonWriter.writeHub(user.getUsername(), user.getUserID().toString(), user.getHub());
+                jsonWriter.close();
+                JOptionPane.showMessageDialog(null,
+                        "Saved " + user.getUsername() + "'s Hub to" + pathForSpecificUser);
+            } else {
+                JOptionPane.showMessageDialog(null,
+                        "User is not properly initialized or username is null.");
+            }
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Unexpected FileNotFoundException!");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null,
+                    "Unexpected IOException!");
+        }
     }
 
     private void initComponents(Boolean isExistingUser) {
@@ -79,8 +116,10 @@ public class HubUI extends JPanel {
     private void displayHub() {
         notes = new NotesUI(user);
         reminders = new RemindersUI(user);
+        contactList = new ContactListUI(user);
         hubTabs.addTab("Notes", notes);
         hubTabs.addTab("Reminders", reminders);
+        hubTabs.addTab("Contact List",contactList);
         hubTabs.setVisible(true);
 
 
