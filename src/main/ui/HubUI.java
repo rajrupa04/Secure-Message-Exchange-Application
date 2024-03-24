@@ -105,6 +105,7 @@ public class HubUI extends JPanel {
         } else if (!isExistingUser) {
             hubTabs = new JTabbedPane();
             hubTabs.setVisible(true);
+            pathForSpecificUser = "./data/" + user.getUsername() + ".json";
             generateNewHub(user);
             JOptionPane.showMessageDialog(null,
                     "Your new empty Hub has been generated!");

@@ -3,8 +3,7 @@ package ui;
 import model.*;
 
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
 
 public class MainAppUI extends JPanel {
     private static final int WIDTH = 800;
@@ -35,6 +34,7 @@ public class MainAppUI extends JPanel {
 
     private void loginForExistingUser() {
         LoginPanelExistingUser loginPanel = new LoginPanelExistingUser();
+        loginPanel.setSize(500,600);
         JInternalFrame internalFrame = createInternalFrame("Login Panel", loginPanel);
         user = loginPanel.returnUser();
         desktop.add(internalFrame);
@@ -42,6 +42,7 @@ public class MainAppUI extends JPanel {
 
     private void loginForNewUser() {
         LoginPanelNewUser loginPanel = new LoginPanelNewUser(frame);
+        loginPanel.setSize(500,600);
         JInternalFrame internalFrame = createInternalFrame("Login Panel", loginPanel);
         desktop.add(internalFrame);
     }
@@ -56,9 +57,27 @@ public class MainAppUI extends JPanel {
     }
 
     private boolean showNewUserDialog() {
-        int option = JOptionPane.showConfirmDialog(frame, "Welcome! Are you a new user?",
-                "Secure Hub Login", JOptionPane.YES_NO_OPTION);
-        return option == JOptionPane.YES_OPTION;
+
+        ImageIcon icon = new ImageIcon("./data/secure_hub_login_logo.png");
+
+
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(255, 182, 193));
+        panel.setSize(new Dimension(200, 64));
+        panel.setLayout(null);
+
+        JLabel label1 = new JLabel("Welcome! Are you a new user?");
+        label1.setVerticalAlignment(SwingConstants.BOTTOM);
+        label1.setFont(new Font("Arial", Font.PLAIN, 12));
+        label1.setBounds(0, 0, 200, 32);
+        label1.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(label1);
+
+        UIManager.put("OptionPane.minimumSize", new Dimension(1000, 600));
+        int input = JOptionPane.showConfirmDialog(null, panel, "Secure Hub Login",
+                JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, icon);
+
+        return input == JOptionPane.YES_OPTION;
     }
 
     public static void main(String[] args) {

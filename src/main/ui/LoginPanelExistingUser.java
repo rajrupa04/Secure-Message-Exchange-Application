@@ -60,9 +60,14 @@ public class LoginPanelExistingUser extends JPanel {
                 String userID = userIDField.getText();
                 boolean loginSuccess = checkLogin(username, password, userID);
                 if (loginSuccess) {
-                    JOptionPane.showMessageDialog(null, "Login Successful!");
+                    JOptionPane.showMessageDialog(null,
+                            "Login Successful!",
+                            "Success",
+                            JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Invalid Login!");
+                    JOptionPane.showMessageDialog(null,
+                            "<html><div style='text-align:center;'>Invalid Login!</div></html>", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
                 generateHubForExistingUser();
                 setVisible(false);

@@ -200,7 +200,9 @@ public class NotesUI extends JPanel {
     }
 
     private void viewAllNotes() {
-        ((TableRowSorter<DefaultTableModel>) notesTable.getRowSorter()).setRowFilter(null);
+        if (notesTable.getRowSorter() != null) {
+            ((TableRowSorter<DefaultTableModel>) notesTable.getRowSorter()).setRowFilter(null);
+        }
     }
 
     private void searchNotes() {

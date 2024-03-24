@@ -75,9 +75,9 @@ public class RemindersUI extends JPanel {
         newReminderDialog.add(addInDialog);
         addActionListenerToAddInDialog(addInDialog, reminderDateField, reminderContentField, newReminderDialog);
 
-        panel.add(new JLabel("Note ID:"));
+        panel.add(new JLabel("Date of reminder:"));
         panel.add(reminderDateField);
-        panel.add(new JLabel("Note Content:"));
+        panel.add(new JLabel("Reminder Content:"));
         panel.add(reminderContentField);
         panel.add(new JLabel());
         panel.add(addInDialog);
@@ -102,7 +102,9 @@ public class RemindersUI extends JPanel {
 
 
                 newReminderDialog.dispose();
-                ((TableRowSorter<DefaultTableModel>) remindersTable.getRowSorter()).setRowFilter(null);
+                if (remindersTable.getRowSorter() != null) {
+                    ((TableRowSorter<DefaultTableModel>) remindersTable.getRowSorter()).setRowFilter(null);
+                }
             }
         });
     }
