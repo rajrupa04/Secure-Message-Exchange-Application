@@ -38,3 +38,12 @@ urgent messages if needed.
 - As a user, I want to be able to **view** how many **unread** messages I have, and how urgent they are.
 - As a user, when I select the **quit** option from the **hub menu**, I want to be reminded to **save** the information in my hub to file and have the **option** to do so or not.
 - As a user, I want to have the **option** to **reload** the saved hub when I start the application.
+
+## Instructions for Grader:
+
+- You can generate the first required action related to the user story "adding multiple Xs to a Y" when your Hub loads. In each of the **Notes**, **Reminders** and **Contact List** tabs, you can add a new entry by pressing the respective **"Add New..."** buttons.
+- You can generate the second required action related to the user story "adding multiple Xs to a Y" in the **Notes** 
+- panel in the Hub, where you can **search** for a note based on the note content. As an alternative, you also have the option to **delete** a note based on the note ID.
+- You can locate the first visual component when the application is first ran, alongside the prompt asking the user to enter if they are a new user or not. In addition, there is another visual component displayed when the user logs in successfully, as well as when the user saves their data to file.
+- You can save the state of my application after adding changes to the hub by clicking the "Save" button at the bottom of the panel.
+- You can reload the state of my application just after logging in successfully, if you are an existing user who has a saved hub. When the prompt to reload the hub from file is presented, clicking **yes** will allow you to reload the hub from file. Clicking **no** will generate a new empty hub for you. 

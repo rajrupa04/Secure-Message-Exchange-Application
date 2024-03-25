@@ -67,10 +67,7 @@ public class LoginPanelNewUser extends JPanel {
                 Integer userID = loginNewUser(username, password);
 
                 frame.setVisible(true);
-                JOptionPane.showMessageDialog(null,
-                        "Account successfully created! Welcome, " + nameOfUser + ". Please note that"
-                                +
-                                " your user ID is: " + userID);
+                showSuccessfulLoginIcon(nameOfUser, userID);
                 pathForSpecificUser = "./data/" + username + ".json";
                 addNewUserToFile();
                 generateHubForNewUser();
@@ -78,6 +75,26 @@ public class LoginPanelNewUser extends JPanel {
 
             }
         });
+    }
+
+    private void showSuccessfulLoginIcon(String nameOfUser, Integer userID) {
+        UIManager.put("OptionPane.minimumSize", new Dimension(600, 600));
+        ImageIcon imageIcon = new ImageIcon("./data/login_successful_icon.png");
+        Image originalImage = imageIcon.getImage();
+        int desiredWidth = 500;
+        int desiredHeight = 500;
+        Image scaledImage = originalImage.getScaledInstance(desiredWidth, desiredHeight, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel imageLabel = new JLabel(scaledIcon);
+        panel.add(imageLabel, BorderLayout.WEST);
+        JLabel text = new JLabel("Account successfully created! Welcome, " + nameOfUser + ". Please note that"
+                +
+                " your user ID is: " + userID);
+        panel.add(text,BorderLayout.SOUTH);
+        JOptionPane.showMessageDialog(null, panel, "Saved", JOptionPane.INFORMATION_MESSAGE);
+        UIManager.put("OptionPane.minimumSize", new Dimension(400, 150));
+
     }
 
     private void generateHubForNewUser() {

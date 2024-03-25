@@ -2,8 +2,12 @@ package ui;
 
 import model.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class MainAppUI extends JPanel {
     private static final int WIDTH = 800;
@@ -13,11 +17,15 @@ public class MainAppUI extends JPanel {
     private User user;
 
     public MainAppUI() {
-        frame = new JFrame("Secure Hub Login");
+        frame = new JFrame("Secure Hub");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(WIDTH, HEIGHT);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+
 
         desktop = new JDesktopPane();
+        desktop.setBackground(new Color(250,218,221));
         frame.add(desktop);
 
         boolean isNewUser = showNewUserDialog();
@@ -77,6 +85,7 @@ public class MainAppUI extends JPanel {
         int input = JOptionPane.showConfirmDialog(null, panel, "Secure Hub Login",
                 JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, icon);
 
+        UIManager.put("OptionPane.minimumSize", new Dimension(400, 150));
         return input == JOptionPane.YES_OPTION;
     }
 

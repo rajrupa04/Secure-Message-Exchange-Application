@@ -60,10 +60,7 @@ public class LoginPanelExistingUser extends JPanel {
                 String userID = userIDField.getText();
                 boolean loginSuccess = checkLogin(username, password, userID);
                 if (loginSuccess) {
-                    JOptionPane.showMessageDialog(null,
-                            "Login Successful!",
-                            "Success",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    displayLoginSuccessfulIcon();
                 } else {
                     JOptionPane.showMessageDialog(null,
                             "<html><div style='text-align:center;'>Invalid Login!</div></html>", "Error",
@@ -75,6 +72,16 @@ public class LoginPanelExistingUser extends JPanel {
             }
         });
 
+    }
+
+    private void displayLoginSuccessfulIcon() {
+        UIManager.put("OptionPane.minimumSize", new Dimension(600, 600));
+        ImageIcon imageIcon = new ImageIcon("./data/login_successful_icon.png");
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel imageLabel = new JLabel(imageIcon);
+        panel.add(imageLabel, BorderLayout.WEST);
+        JOptionPane.showMessageDialog(null, panel, "Success", JOptionPane.INFORMATION_MESSAGE);
+        UIManager.put("OptionPane.minimumSize", new Dimension(400, 150));
     }
 
     private void generateHubForExistingUser() {

@@ -67,8 +67,7 @@ public class HubUI extends JPanel {
                 jsonWriter.open();
                 jsonWriter.writeHub(user.getUsername(), user.getUserID().toString(), user.getHub());
                 jsonWriter.close();
-                JOptionPane.showMessageDialog(null,
-                        "Saved " + user.getUsername() + "'s Hub to" + pathForSpecificUser);
+                displaySavedHubLogo();
             } else {
                 JOptionPane.showMessageDialog(null,
                         "User is not properly initialized or username is null.");
@@ -80,6 +79,32 @@ public class HubUI extends JPanel {
             JOptionPane.showMessageDialog(null,
                     "Unexpected IOException!");
         }
+    }
+
+    private void displaySavedHubLogo() {
+        UIManager.put("OptionPane.minimumSize", new Dimension(600, 600));
+        ImageIcon imageIcon = new ImageIcon("./data/hub_saved_icon.png");
+
+        Image originalImage = imageIcon.getImage();
+
+
+        int desiredWidth = 500;
+        int desiredHeight = 500;
+
+
+        Image scaledImage = originalImage.getScaledInstance(desiredWidth, desiredHeight, Image.SCALE_SMOOTH);
+
+
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel imageLabel = new JLabel(scaledIcon);
+        panel.add(imageLabel, BorderLayout.WEST);
+        JLabel text = new JLabel("Saved " + user.getUsername() + "'s Hub to" + pathForSpecificUser);
+        panel.add(text,BorderLayout.SOUTH);
+        JOptionPane.showMessageDialog(null, panel, "Saved", JOptionPane.INFORMATION_MESSAGE);
+        UIManager.put("OptionPane.minimumSize", new Dimension(400, 150));
+
     }
 
     private void initComponents(Boolean isExistingUser) {
