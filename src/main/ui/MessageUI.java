@@ -5,6 +5,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import model.*;
 import org.json.JSONArray;
@@ -15,11 +16,12 @@ import persistence.JsonWriter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class MessageUI extends JPanel {
     private JFrame frame;
@@ -32,13 +34,15 @@ public class MessageUI extends JPanel {
     private JsonWriter jsonWriterUserInfo;
     private String pathForSpecificUser;
     private static final String JSON_USERINFO = "./data/userinfo.json";
+    private JTextField searchField;
+    private JButton searchButton;
 
     public MessageUI(User user) {
         this.user = user;
         pathForSpecificUser = "./data/" + user.getUsername() + ".json";
         this.messageFolder = user.getHub().getMessageFolder();
         jsonWriterUserInfo = new JsonWriter(JSON_USERINFO);
-        jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
+        jsonReader = new JsonReader(pathForSpecificUser, JSON_USERINFO);
         initComponents();
         setupLayout();
     }
@@ -111,7 +115,7 @@ public class MessageUI extends JPanel {
                 User recipient = readUserFromFile(rid);
                 String recipientFilePath = "./data/" + recipient.getUsername() + ".json";
                 try {
-                    loadRecipientHub(recipient,recipientFilePath);
+                    loadRecipientHub(recipient, recipientFilePath);
                     UrgencyLevel ul = UrgencyLevel.valueOf(urgencyComboBox.getSelectedItem().toString());
                     String msg = msgContents.getText();
                     Integer messageID = 0;
@@ -157,16 +161,16 @@ public class MessageUI extends JPanel {
     private void addMessageToRecipientJson(User recipient, Integer messageID, User sender,
                                            String msgContents, UrgencyLevel msgUrgency, String recipientFilePath) {
 
-        jsonReader = new JsonReader(recipientFilePath,JSON_USERINFO);
+        jsonReader = new JsonReader(recipientFilePath, JSON_USERINFO);
         try {
             JSONObject hubJson = jsonReader.returnJsonObject(recipientFilePath);
             JSONArray messageFolderArray = hubJson.getJSONObject("Hub").getJSONArray("MessageFolder");
             JSONObject msg = new JSONObject();
-            msg.put("SenderUserID",sender.getUserID());
-            msg.put("RecipientUserID",recipient.getUserID());
-            msg.put("MessageID",messageID);
-            msg.put("DecryptedMessageText",msgContents);
-            msg.put("Urgency Level",msgUrgency.toString());
+            msg.put("SenderUserID", sender.getUserID());
+            msg.put("RecipientUserID", recipient.getUserID());
+            msg.put("MessageID", messageID);
+            msg.put("DecryptedMessageText", msgContents);
+            msg.put("Urgency Level", msgUrgency.toString());
             messageFolderArray.put(msg);
             hubJson.getJSONObject("Hub").put("MessageFolder", messageFolderArray);
 
@@ -178,14 +182,14 @@ public class MessageUI extends JPanel {
             jsonWriter.close();
 
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,"Error! Unable to write to recipient file");
+            JOptionPane.showMessageDialog(null, "Error! Unable to write to recipient file");
         }
     }
 
 
     private void loadRecipientHub(User recipient, String fp) throws NoSuchPaddingException, NoSuchAlgorithmException {
         try {
-            jsonReader = new JsonReader(fp,JSON_USERINFO);
+            jsonReader = new JsonReader(fp, JSON_USERINFO);
             Hub h = new Hub();
             h = jsonReader.read(user.getUserID());
             recipient.setHub(h);
@@ -198,6 +202,7 @@ public class MessageUI extends JPanel {
 
     private User readUserFromFile(Integer id) {
         try {
+
             JSONObject userJsonObject = jsonReader.returnJsonObject(JSON_USERINFO);
             User u = jsonReader.getUserByID(id, userJsonObject);
             return u;
@@ -210,7 +215,35 @@ public class MessageUI extends JPanel {
 
 
     private void searchImplementation() {
+        searchField = new JTextField(20);
+        searchButton = new JButton("Search");
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchMessages();
+            }
+        });
 
+        JPanel searchPanel = new JPanel();
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        add(searchPanel, BorderLayout.NORTH);
+
+        JScrollPane scrollPane = new JScrollPane(messagesTable);
+        add(scrollPane, BorderLayout.CENTER);
+
+    }
+
+    private void searchMessages() {
+        String searchText = searchField.getText();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) messagesTable.getModel());
+        messagesTable.setRowSorter(sorter);
+        if (!searchText.isEmpty()) {
+            String escapedSearchText = Pattern.quote(searchText);
+            sorter.setRowFilter(RowFilter.regexFilter(escapedSearchText));
+        } else {
+            sorter.setRowFilter(null);
+        }
     }
 
     private void initComponents() {
@@ -219,26 +252,37 @@ public class MessageUI extends JPanel {
                 new String[]{"Sender", "Urgency Level", "Message"}
         );
 
-        try {
-            JSONObject hubJson = jsonReader.returnJsonObject(pathForSpecificUser);
-            JSONArray messageFolder = hubJson.getJSONObject("Hub").getJSONArray("MessageFolder");
-            for (Object o : messageFolder) {
-                JSONObject jsonObj = (JSONObject) o;
-                String decryptedMessage = jsonObj.getString("DecryptedMessageText");
-                Integer senderID = jsonObj.getInt("SenderUserID");
-                JSONObject userJsonObject =  jsonReader.returnJsonObject(JSON_USERINFO);
-                String senderUsername = jsonReader.getUserByID(senderID,userJsonObject).getUsername();
-                String urgency = jsonObj.getString("Urgency Level");
-                tableModel.addRow(new Object[]{senderUsername,urgency,decryptedMessage});
+        JSONObject hubJson = new JSONObject();
+        fillInMessageTable(hubJson, tableModel);
 
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,"Unexpected IOException!");
-        }
 
         messagesTable = new JTable(tableModel);
         messagesTable.setVisible(true);
-
     }
 
+    private void fillInMessageTable(JSONObject hubJson, DefaultTableModel tableModel) {
+        try {
+            if (new File(pathForSpecificUser).exists()) {
+                hubJson = jsonReader.returnJsonObject(pathForSpecificUser);
+                JSONArray messageFolder = hubJson.getJSONObject("Hub").getJSONArray("MessageFolder");
+                for (Object o : messageFolder) {
+                    JSONObject jsonObj = (JSONObject) o;
+                    String decryptedMessage = jsonObj.getString("DecryptedMessageText");
+                    Integer senderID = jsonObj.getInt("SenderUserID");
+                    JSONObject userJsonObject = jsonReader.returnJsonObject(JSON_USERINFO);
+                    String senderUsername = jsonReader.getUserByID(senderID, userJsonObject).getUsername();
+                    String urgency = jsonObj.getString("Urgency Level");
+                    tableModel.addRow(new Object[]{senderUsername, urgency, decryptedMessage});
+                }
+            }
+
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Unexpected IOException in MessageUI!");
+        }
+    }
 }
+
+
+
+

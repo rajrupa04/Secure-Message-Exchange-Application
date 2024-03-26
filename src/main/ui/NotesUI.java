@@ -10,7 +10,8 @@ import model.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class NotesUI extends JPanel {
     private JFrame frame;
@@ -210,7 +211,8 @@ public class NotesUI extends JPanel {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) notesTable.getModel());
         notesTable.setRowSorter(sorter);
         if (!searchText.isEmpty()) {
-            sorter.setRowFilter(RowFilter.regexFilter(searchText));
+            String escapedSearchText = Pattern.quote(searchText);
+            sorter.setRowFilter(RowFilter.regexFilter(escapedSearchText));
         } else {
             sorter.setRowFilter(null);
         }

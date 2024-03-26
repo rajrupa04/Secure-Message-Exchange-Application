@@ -18,6 +18,7 @@ public class ContactListUI extends JPanel {
     private JTable contactsTable;
     private JButton addButton;
     private ArrayList userContacts;
+    private JButton deleteButton;
 
     public ContactListUI(User u) {
         this.user = u;
@@ -29,17 +30,75 @@ public class ContactListUI extends JPanel {
     private void setupLayout() {
         setLayout(new BorderLayout());
         addContactImplementation();
+        deleteContactImplementation();
 
         JScrollPane scrollPane = new JScrollPane(contactsTable);
 
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(addButton);
+        buttonsPanel.add(deleteButton);
 
         add(buttonsPanel, BorderLayout.SOUTH);
 
         add(scrollPane, BorderLayout.CENTER);
 
         setVisible(true);
+    }
+
+    private void deleteContactImplementation() {
+        deleteButton = new JButton("Delete Existing Contact");
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteExistingContact();
+            }
+        });
+    }
+
+    private void deleteExistingContact() {
+        JDialog deleteDialog = new JDialog(frame, "Delete Existing Contact");
+        JPanel panel = new JPanel(new GridLayout(3, 2));
+        JTextField usernameField = new JTextField("Username", 20);
+
+        deleteDialog.add(usernameField);
+        JButton deleteInDialog = new JButton("Delete");
+        deleteDialog.add(deleteInDialog);
+        addActionListenerToDeleteDialog(deleteDialog, usernameField, deleteInDialog);
+
+        panel.add(new JLabel("Username of contact to be deleted:"));
+        panel.add(usernameField);
+        panel.add(new JLabel());
+        panel.add(deleteInDialog);
+
+        deleteDialog.add(panel);
+        deleteDialog.pack();
+        deleteDialog.setLocationRelativeTo(null);
+        deleteDialog.setVisible(true);
+    }
+
+    private void addActionListenerToDeleteDialog(JDialog deleteDialog, JTextField usernameField,
+                                                 JButton deleteInDialog) {
+
+        deleteInDialog.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = usernameField.getText();
+                userContacts.remove(username);
+                DefaultTableModel tableModel = (DefaultTableModel) contactsTable.getModel();
+                for (int i = 0; i < tableModel.getRowCount(); i++) {
+                    if (tableModel.getValueAt(i, 1).toString().equals(username)) {
+                        tableModel.removeRow(i);
+                        break;
+                    }
+                }
+
+
+                deleteDialog.dispose();
+                if (contactsTable.getRowSorter() != null) {
+                    ((TableRowSorter<DefaultTableModel>) contactsTable.getRowSorter()).setRowFilter(null);
+                }
+            }
+        });
     }
 
     private void addContactImplementation() {

@@ -14,6 +14,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -33,10 +34,13 @@ public class HubUI extends JPanel {
     private User user;
     private JPanel savePanel;
     private String username;
+    private boolean notificationsDisplayed;
+
 
     public HubUI(Boolean isExistingUser, User user) {
 
         this.user = user;
+        notificationsDisplayed = false;
         initComponents(isExistingUser);
         setupLayout();
         initJson();
@@ -82,7 +86,7 @@ public class HubUI extends JPanel {
                     "Unexpected FileNotFoundException!");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null,
-                    "Unexpected IOException!");
+                    "Unexpected IOException during saving!");
         }
     }
 
@@ -156,37 +160,48 @@ public class HubUI extends JPanel {
         hubTabs.addTab("Messages",messages);
         hubTabs.setVisible(true);
         final JSONObject[] hubJson = {null};
-
-
-        hubTabs.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                try {
-                    hubJson[0] = jsonReader.returnJsonObject("./data/" + user.getUsername() + ".json");
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null,"IOException!");
-                }
-                if (hubTabs.getSelectedIndex() == 3) {
-                    displayNotifications(hubJson[0]);
-                }
-            }
-        });
+        addChangeListenerToHub();
 
 
 
     }
 
-    private void displayNotifications(JSONObject hubJson) {
-        JSONArray notifsJson = hubJson.getJSONObject("Hub").getJSONArray("Notifications");
-        if (notifsJson.length() > 0) {
+    private void addChangeListenerToHub() {
+        final JSONObject[] hubJson = {null};
+        hubTabs.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    if (new File("./data/" + user.getUsername() + ".json").exists()) {
+                        hubJson[0] = jsonReader.returnJsonObject("./data/" + user.getUsername() + ".json");
+                    }
 
-            for (Object o : notifsJson) {
-                JSONObject jsonObj = (JSONObject) o;
-                String message = jsonObj.getString("Message");
+
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null,"IOException!");
+                }
+                if ((hubTabs.getSelectedIndex() == 3) && !notificationsDisplayed) {
+                    displayNotifications(hubJson[0]);
+                    notificationsDisplayed = true;
+                }
+            }
+        });
+    }
+
+    private void displayNotifications(JSONObject hubJson) {
+        if (hubJson != null) {
+
+            JSONArray notifsJson = hubJson.getJSONObject("Hub").getJSONArray("Notifications");
+            int lastIndex = notifsJson.length() - 1;
+            if (lastIndex >= 0) {
+                JSONObject lastJsonObject = notifsJson.getJSONObject(lastIndex);
+                String message = lastJsonObject.getString("Message");
                 JOptionPane.showMessageDialog(null, message);
+
             }
 
         }
+
     }
 
     private void generateNewHub(User user) {

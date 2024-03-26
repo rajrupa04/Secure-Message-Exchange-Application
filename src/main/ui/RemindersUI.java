@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class RemindersUI extends JPanel {
     private User user;
@@ -114,7 +115,9 @@ public class RemindersUI extends JPanel {
         viewAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ((TableRowSorter<DefaultTableModel>) remindersTable.getRowSorter()).setRowFilter(null);
+                if (remindersTable.getRowSorter() != null) {
+                    ((TableRowSorter<DefaultTableModel>) remindersTable.getRowSorter()).setRowFilter(null);
+                }
             }
         });
 
@@ -145,7 +148,8 @@ public class RemindersUI extends JPanel {
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) remindersTable.getModel());
         remindersTable.setRowSorter(sorter);
         if (!searchText.isEmpty()) {
-            sorter.setRowFilter(RowFilter.regexFilter(searchText));
+            String escapedSearchText = Pattern.quote(searchText);
+            sorter.setRowFilter(RowFilter.regexFilter(escapedSearchText));
         } else {
             sorter.setRowFilter(null);
         }
