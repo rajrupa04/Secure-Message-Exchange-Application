@@ -2,11 +2,15 @@ package ui;
 
 import model.Hub;
 import model.User;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +23,7 @@ public class HubUI extends JPanel {
     private NotesUI notes;
     private RemindersUI reminders;
     private ContactListUI contactList;
+    private MessageUI messages;
 
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
@@ -143,13 +148,45 @@ public class HubUI extends JPanel {
         notes = new NotesUI(user);
         reminders = new RemindersUI(user);
         contactList = new ContactListUI(user);
+        messages = new MessageUI(user);
+
         hubTabs.addTab("Notes", notes);
         hubTabs.addTab("Reminders", reminders);
         hubTabs.addTab("Contact List",contactList);
+        hubTabs.addTab("Messages",messages);
         hubTabs.setVisible(true);
+        final JSONObject[] hubJson = {null};
+
+
+        hubTabs.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                try {
+                    hubJson[0] = jsonReader.returnJsonObject("./data/" + user.getUsername() + ".json");
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null,"IOException!");
+                }
+                if (hubTabs.getSelectedIndex() == 3) {
+                    displayNotifications(hubJson[0]);
+                }
+            }
+        });
 
 
 
+    }
+
+    private void displayNotifications(JSONObject hubJson) {
+        JSONArray notifsJson = hubJson.getJSONObject("Hub").getJSONArray("Notifications");
+        if (notifsJson.length() > 0) {
+
+            for (Object o : notifsJson) {
+                JSONObject jsonObj = (JSONObject) o;
+                String message = jsonObj.getString("Message");
+                JOptionPane.showMessageDialog(null, message);
+            }
+
+        }
     }
 
     private void generateNewHub(User user) {
