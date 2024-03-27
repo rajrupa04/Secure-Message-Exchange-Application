@@ -1,13 +1,11 @@
 package ui;
 
 import model.*;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+
+//This is the class representing the main user interface of the application. Upon running this class, the UI will
+//begin to display.
 
 public class MainAppUI extends JPanel {
     private static final int WIDTH = 800;
@@ -16,6 +14,9 @@ public class MainAppUI extends JPanel {
     private JDesktopPane desktop;
     private User user;
 
+    //MODIFIES: this
+    //EFFECTS: constructs a new MainAppUI object, initialising the size, colour and state of the main frame
+    // while ensuring it is visible.
     public MainAppUI() {
         frame = new JFrame("Secure Hub");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,6 +41,8 @@ public class MainAppUI extends JPanel {
         frame.setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: Allows an existing user to log in. The method also sets the size and state of the login panel.
     private void loginForExistingUser() {
         LoginPanelExistingUser loginPanel = new LoginPanelExistingUser();
         loginPanel.setSize(500,600);
@@ -48,6 +51,9 @@ public class MainAppUI extends JPanel {
         desktop.add(internalFrame);
     }
 
+    //MODIFIES: this
+    //EFFECTS: Allows a new user to set their login credentials. The method also sets the size and state of the
+    // login panel.
     private void loginForNewUser() {
         LoginPanelNewUser loginPanel = new LoginPanelNewUser(frame);
         loginPanel.setSize(500,600);
@@ -55,6 +61,7 @@ public class MainAppUI extends JPanel {
         desktop.add(internalFrame);
     }
 
+    //EFFECTS: Returns an internal frame containing the specified panel with the provided title.
     private JInternalFrame createInternalFrame(String title, JPanel panel) {
         JInternalFrame internalFrame = new JInternalFrame(title, false, true, true,
                 true);
@@ -64,6 +71,8 @@ public class MainAppUI extends JPanel {
         return internalFrame;
     }
 
+    //EFFECTS: Displays the dialog asking the user if they are a new user or not, returning whether the user
+    //chose yes or not.
     private boolean showNewUserDialog() {
 
         ImageIcon icon = new ImageIcon("./data/secure_hub_login_logo.png");
@@ -89,6 +98,7 @@ public class MainAppUI extends JPanel {
         return input == JOptionPane.YES_OPTION;
     }
 
+    //EFFECTS: Creates a new instance of the MainAppUI class, launching the application.
     public static void main(String[] args) {
         new MainAppUI();
     }

@@ -2,7 +2,6 @@ package ui;
 
 
 import model.User;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
@@ -11,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+//This class represents the user interface for managing the user's contact list.
 
 public class ContactListUI extends JPanel {
     private User user;
@@ -20,6 +20,8 @@ public class ContactListUI extends JPanel {
     private ArrayList userContacts;
     private JButton deleteButton;
 
+    //EFFECTS: Constructs a ContactListUI object. Initialises the userContacts field and the components of the frame,
+    //also sets up the layout of the frame components.
     public ContactListUI(User u) {
         this.user = u;
         userContacts = new ArrayList<>();
@@ -27,6 +29,8 @@ public class ContactListUI extends JPanel {
         setupLayout();
     }
 
+    //Sets up the layout of the different actions available to the user in the UI. Ensures all the
+    // components are visible.
     private void setupLayout() {
         setLayout(new BorderLayout());
         addContactImplementation();
@@ -45,16 +49,21 @@ public class ContactListUI extends JPanel {
         setVisible(true);
     }
 
+    //EFFECTS: Implements the functionality for deleting an existing contact.
     private void deleteContactImplementation() {
         deleteButton = new JButton("Delete Existing Contact");
         deleteButton.addActionListener(new ActionListener() {
             @Override
+            //EFFECTS: If the delete button is clicked, the contact corresponding to the user's entered username
+            //is deleted.
             public void actionPerformed(ActionEvent e) {
                 deleteExistingContact();
             }
         });
     }
 
+    //EFFECTS: Implements and sisplays the panel which provides the fields for the user to enter the username to delete,
+    // as well as the delete button.
     private void deleteExistingContact() {
         JDialog deleteDialog = new JDialog(frame, "Delete Existing Contact");
         JPanel panel = new JPanel(new GridLayout(3, 2));
@@ -76,11 +85,14 @@ public class ContactListUI extends JPanel {
         deleteDialog.setVisible(true);
     }
 
+    //EFFECTS: Adds the action listener to the delete dialog.
     private void addActionListenerToDeleteDialog(JDialog deleteDialog, JTextField usernameField,
                                                  JButton deleteInDialog) {
 
         deleteInDialog.addActionListener(new ActionListener() {
             @Override
+            //EFFECTS: When the delete button in the dialog is clicked, the contact to be deleted is removed from the
+            //table model, as well as from the userContacts arraylist.
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
                 userContacts.remove(username);
@@ -101,6 +113,7 @@ public class ContactListUI extends JPanel {
         });
     }
 
+    //EFFECTS: Implements the functionality for adding a new contact.
     private void addContactImplementation() {
         addButton = new JButton("Add New Contact");
         addButton.addActionListener(new ActionListener() {
@@ -111,6 +124,7 @@ public class ContactListUI extends JPanel {
         });
     }
 
+    //EFFECTS: Allows the user to enter the username of the contact to be added in a panel.
     private void addNewContact() {
         JDialog newContactPanel = new JDialog(frame, "Add new Contact");
         JPanel panel = new JPanel(new GridLayout(3, 2));
@@ -132,11 +146,14 @@ public class ContactListUI extends JPanel {
         newContactPanel.setVisible(true);
     }
 
+    //EFFECTS: Adds the action listener to the dialog adding a new contact.
     private void addActionListenerToAddInDialog(JButton addInDialog, JTextField contactUsernameField,
                                                 JDialog newContactPanel) {
 
         addInDialog.addActionListener(new ActionListener() {
             @Override
+            //EFFECTS: When the add button in the dialog is clicked, the table model is updated with the new username.
+            //and the username is added to the userContacts arraylist.
             public void actionPerformed(ActionEvent e) {
                 String username = contactUsernameField.getText();
                 userContacts.add(username);
@@ -153,6 +170,8 @@ public class ContactListUI extends JPanel {
 
 
 
+    //EFFECTS: Creates the table which displays the user's contacts. Establishes the connection between the userContacts
+    //field and the user's hub.
     private void initComponents() {
         DefaultTableModel tableModel = new DefaultTableModel(
                 new Object[][]{},

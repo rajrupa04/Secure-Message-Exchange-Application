@@ -15,36 +15,14 @@
             }
         ],
         "MessageFolder": [
-            {
-                "SenderUserID": 99432041,
-                "DecryptedMessageText": "hey2",
-                "SharedKey": "0AhbO11UFVE=",
-                "RecipientUserID": 99432042,
-                "MessageID": 406076752,
-                "Urgency Level": "URGENT"
-            },
-            {
-                "SenderUserID": 99432041,
-                "DecryptedMessageText": "hey1",
-                "SharedKey": "ehbH4OVKig0=",
-                "RecipientUserID": 99432042,
-                "MessageID": 748354784,
-                "Urgency Level": "REGULAR"
-            }
+
         ],
         "ContactList": [
             "raj2410",
             "khush12"
         ],
         "Notifications": [
-            {
-                "Message": "You have 1 new message of type: URGENT",
-                "UrgencyLevel": "URGENT"
-            },
-            {
-                "Message": "You have 1 new message of type: REGULAR",
-                "UrgencyLevel": "REGULAR"
-            }
+
         ],
         "Notes": [
             {

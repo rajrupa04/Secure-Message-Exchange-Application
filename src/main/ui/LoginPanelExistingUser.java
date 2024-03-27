@@ -4,12 +4,13 @@ import model.User;
 import org.json.JSONObject;
 import persistence.JsonReader;
 import persistence.JsonWriter;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+
+//This class represents the login panel which is displayed if the user is an existing user.
 
 public class LoginPanelExistingUser extends JPanel {
     private JTextField usernameField;
@@ -23,23 +24,28 @@ public class LoginPanelExistingUser extends JPanel {
     private static final String JSON_USERINFO = "./data/userinfo.json";
     private User user;
 
+    //EFFECTS: Initializes the panel components, sets up their layout, and initializes JSON reader and writer.
     public LoginPanelExistingUser() {
         initComponents();
         setupLayout();
         initJson();
     }
 
+    //EFFECTS: Initialises the JSON Writer to write to the file containing all user information, and the reader to
+    //read from both the aforementioned file and the file pertaining to the current user's hub.
     private void initJson() {
         jsonWriterUserInfo = new JsonWriter(JSON_USERINFO);
         jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
     }
 
+    //EFFECTS: returns the text entered by the user in the username field.
     public String getUsername() {
 
         return usernameField.getText();
 
     }
 
+    //EFFECTS: initialises the username, password, user ID text fields, as well as the login button.
     private void initComponents() {
         JLabel textLabel = new JLabel("Welcome back!");
         usernameField = new JTextField(20);
@@ -51,9 +57,13 @@ public class LoginPanelExistingUser extends JPanel {
 
     }
 
+    //EFFECTS: adds an action listener for the login button.
     private void addActionListenerForLoginButton() {
         loginButton.addActionListener(new ActionListener() {
             @Override
+            //EFFECTS: when the login button is clicked, the user's entered credentials are authenticated. If they match
+            //the information stored on file, the login successful icon is displayed, otherwise,
+            // an error message is shown.
             public void actionPerformed(ActionEvent e) {
                 String username = usernameField.getText();
                 String password = new String(passwordField.getPassword());
@@ -61,19 +71,20 @@ public class LoginPanelExistingUser extends JPanel {
                 boolean loginSuccess = checkLogin(username, password, userID);
                 if (loginSuccess) {
                     displayLoginSuccessfulIcon();
+                    generateHubForExistingUser();
+                    setVisible(false);
                 } else {
                     JOptionPane.showMessageDialog(null,
                             "<html><div style='text-align:center;'>Invalid Login!</div></html>", "Error",
                             JOptionPane.ERROR_MESSAGE);
                 }
-                generateHubForExistingUser();
-                setVisible(false);
-
             }
         });
 
     }
 
+    //EFFECTS: Displays an icon signifying that the login was successful. the UIManager changes the size of the icon
+    //as necessary to ensure the entire image is visible.
     private void displayLoginSuccessfulIcon() {
         UIManager.put("OptionPane.minimumSize", new Dimension(600, 600));
         ImageIcon imageIcon = new ImageIcon("./data/login_successful_icon.png");
@@ -84,6 +95,8 @@ public class LoginPanelExistingUser extends JPanel {
         UIManager.put("OptionPane.minimumSize", new Dimension(400, 150));
     }
 
+    //EFFECTS: generates an internal frame containing the hub for the existing user. Creates a new instance of the HubUI
+    //class.
     private void generateHubForExistingUser() {
         HubUI hexisting = new HubUI(true, user);
         JInternalFrame internalFrame = new JInternalFrame("Hub UI", true, true, true,
@@ -101,6 +114,7 @@ public class LoginPanelExistingUser extends JPanel {
 
     }
 
+    //EFFECTS: sets up the layout of the login panel, adding the required fields as well as the respective labels.
     private void setupLayout() {
         setLayout(new GridLayout(4, 2));
         add(new JLabel("Username:"));
@@ -112,6 +126,8 @@ public class LoginPanelExistingUser extends JPanel {
         add(loginButton);
     }
 
+    //EFFECTS: authenticates the login attempt by checking if the user's credentials matches what is on file.
+    //Updates the path for specific user if the login is successful.
     private boolean checkLogin(String username, String password, String userID) {
         Integer id = Integer.parseInt(userID);
         User userFromFile = readUserFromFile(id);
@@ -126,6 +142,8 @@ public class LoginPanelExistingUser extends JPanel {
         }
     }
 
+    //EFFECTS: reads the JSON file with the user information and returns the user object corresponding to
+    // the provided ID.
     public User readUserFromFile(Integer id) {
         try {
             JSONObject userJsonObject = jsonReader.returnJsonObject(JSON_USERINFO);
@@ -137,6 +155,7 @@ public class LoginPanelExistingUser extends JPanel {
         return null;
     }
 
+    //EFFECTS: returns the value of the user field.
     public User returnUser() {
         return user;
     }
