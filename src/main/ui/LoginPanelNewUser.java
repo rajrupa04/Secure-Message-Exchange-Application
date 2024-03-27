@@ -53,6 +53,7 @@ public class LoginPanelNewUser extends JPanel {
         jsonReader = new JsonReader(pathForSpecificUser,JSON_USERINFO);
     }
 
+    //MODIFIES: this
     //EFFECTS: Initializes the username field, password field, and login button.
     private void initComponents() {
         JLabel textLabel = new JLabel("Welcome, new user!");

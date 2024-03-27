@@ -24,6 +24,7 @@ public class LoginPanelExistingUser extends JPanel {
     private static final String JSON_USERINFO = "./data/userinfo.json";
     private User user;
 
+    //MODIFIES: this
     //EFFECTS: Initializes the panel components, sets up their layout, and initializes JSON reader and writer.
     public LoginPanelExistingUser() {
         initComponents();
@@ -45,6 +46,7 @@ public class LoginPanelExistingUser extends JPanel {
 
     }
 
+    //MODIFIES: this
     //EFFECTS: initialises the username, password, user ID text fields, as well as the login button.
     private void initComponents() {
         JLabel textLabel = new JLabel("Welcome back!");
@@ -143,7 +145,7 @@ public class LoginPanelExistingUser extends JPanel {
     }
 
     //EFFECTS: reads the JSON file with the user information and returns the user object corresponding to
-    // the provided ID.
+    // the provided ID. Handles the IOException accordingly.
     public User readUserFromFile(Integer id) {
         try {
             JSONObject userJsonObject = jsonReader.returnJsonObject(JSON_USERINFO);

@@ -178,6 +178,7 @@ public class HubUI extends JPanel {
 
     }
 
+    //MODIFIES: this
     //EFFECTS: Adds tabs for notes, reminders, contacts, and messages to the hub UI and displays it.
     private void displayHub() {
         notes = new NotesUI(user);
@@ -197,13 +198,14 @@ public class HubUI extends JPanel {
 
     }
 
+    //MODIFIES: this
     //EFFECTS: Handles changes in the selected tab of the hub.
     private void addChangeListenerToHub() {
         final JSONObject[] hubJson = {null};
         hubTabs.addChangeListener(new ChangeListener() {
             @Override
             //EFFECTS: If the messages tab in the Hub UI is opened and the user has a new message,
-            //a notification is displayed only once.
+            //a notification is displayed only once. Handles the IOException appropriately.
             public void stateChanged(ChangeEvent e) {
                 try {
                     if (new File("./data/" + user.getUsername() + ".json").exists()) {

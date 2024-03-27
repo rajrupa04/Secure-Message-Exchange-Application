@@ -20,6 +20,7 @@ public class ContactListUI extends JPanel {
     private ArrayList userContacts;
     private JButton deleteButton;
 
+    //MODIFIES: this
     //EFFECTS: Constructs a ContactListUI object. Initialises the userContacts field and the components of the frame,
     //also sets up the layout of the frame components.
     public ContactListUI(User u) {
@@ -29,7 +30,7 @@ public class ContactListUI extends JPanel {
         setupLayout();
     }
 
-    //Sets up the layout of the different actions available to the user in the UI. Ensures all the
+    //EFFECTS: Sets up the layout of the different actions available to the user in the UI. Ensures all the
     // components are visible.
     private void setupLayout() {
         setLayout(new BorderLayout());
@@ -49,6 +50,7 @@ public class ContactListUI extends JPanel {
         setVisible(true);
     }
 
+    //MODIFIES: this
     //EFFECTS: Implements the functionality for deleting an existing contact.
     private void deleteContactImplementation() {
         deleteButton = new JButton("Delete Existing Contact");
@@ -85,6 +87,7 @@ public class ContactListUI extends JPanel {
         deleteDialog.setVisible(true);
     }
 
+    //MODIFIES: this
     //EFFECTS: Adds the action listener to the delete dialog.
     private void addActionListenerToDeleteDialog(JDialog deleteDialog, JTextField usernameField,
                                                  JButton deleteInDialog) {
@@ -113,11 +116,14 @@ public class ContactListUI extends JPanel {
         });
     }
 
+    //MODIFIES: this
     //EFFECTS: Implements the functionality for adding a new contact.
     private void addContactImplementation() {
         addButton = new JButton("Add New Contact");
         addButton.addActionListener(new ActionListener() {
             @Override
+            //EFFECTS: When the add new contact button is clicked, a dialog is presented asking the user to enter
+            // the username of the new contact.
             public void actionPerformed(ActionEvent e) {
                 addNewContact();
             }
@@ -170,6 +176,7 @@ public class ContactListUI extends JPanel {
 
 
 
+    //MODIFIES: this
     //EFFECTS: Creates the table which displays the user's contacts. Establishes the connection between the userContacts
     //field and the user's hub.
     private void initComponents() {

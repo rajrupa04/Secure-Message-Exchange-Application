@@ -6,13 +6,11 @@ import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-
 import model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.JsonReader;
 import persistence.JsonWriter;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +20,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
+
+//This class represents the Messages Tab in the user's hub. It handles the displaying, searching and sending
+//of messages.
 
 public class MessageUI extends JPanel {
     private JFrame frame;
@@ -37,6 +38,8 @@ public class MessageUI extends JPanel {
     private JTextField searchField;
     private JButton searchButton;
 
+    //MODIFIES: this
+    //EFFECTS: Initializes the MessageUI object, sets up the layout and initializes components.
     public MessageUI(User user) {
         this.user = user;
         pathForSpecificUser = "./data/" + user.getUsername() + ".json";
@@ -47,6 +50,9 @@ public class MessageUI extends JPanel {
         setupLayout();
     }
 
+
+    //EFFECTS: Configures the layout of the message UI,
+    //adds a button to send a new message and a table to display the existing messages.
     private void setupLayout() {
         setLayout(new BorderLayout());
         searchImplementation();
@@ -61,11 +67,15 @@ public class MessageUI extends JPanel {
     }
 
 
+    //MODIFIES: this
+    //EFFECTS: Defines the functionality for sending a new message. Adds a new button for the same.
     private void sendMessageImplementation() {
 
         sendMessageButton = new JButton("Send new Message");
         sendMessageButton.addActionListener(new ActionListener() {
             @Override
+            //EFFECTS: when the "Send new message" button is clicked, a dialog is presented so that the user
+            //can enter the details of the message and recipient.
             public void actionPerformed(ActionEvent e) {
                 sendMessage();
             }
@@ -73,6 +83,8 @@ public class MessageUI extends JPanel {
 
     }
 
+    //EFFECTS: creates a dialog for sending
+    // a message, taking in the user input for recipient, urgency level and message content.
     private void sendMessage() {
 
         Dialog newMessageDialog = new JDialog(frame, "Send new Message");
@@ -103,6 +115,7 @@ public class MessageUI extends JPanel {
         newMessageDialog.setVisible(true);
     }
 
+    //EFFECTS: adds an action listener to the send button in the dialog presented to the user.
     private void addActionListenerToSendInDialog(JButton send, JTextField recipientUserId,
                                                  JComboBox urgencyComboBox, JTextField msgContents,
                                                  Dialog newMessageDialog) {
@@ -110,6 +123,9 @@ public class MessageUI extends JPanel {
         User sender = this.user;
         send.addActionListener(new ActionListener() {
             @Override
+            //EFFECTS: When the send button in the dialog is clicked, the system retrieves the necessary information
+            // from the input fields, sends the message, and updates the UI accordingly. Appropriate error messages
+            // are displayed if an exception is caught.
             public void actionPerformed(ActionEvent e) {
                 Integer rid = Integer.parseInt(recipientUserId.getText());
                 User recipient = readUserFromFile(rid);
@@ -134,6 +150,8 @@ public class MessageUI extends JPanel {
         });
     }
 
+    //EFFECTS: Handles the sending of the message from the specified sender to the recipient. Shows appropriate
+    //error messages if exceptions are encountered. Returns and displays the messageID of the message.
     private Integer sendMessageToRecipient(Integer messageID, User sender, User recipient, String msg,
                                            UrgencyLevel ul) {
 
@@ -143,21 +161,24 @@ public class MessageUI extends JPanel {
                     "Message sent! The message ID is: " + messageID);
             this.user = sender;
         } catch (UnsupportedEncodingException e) {
-            System.err.println("Unexpected UnsupportedEncodingException!");
+            JOptionPane.showMessageDialog(null,"Unexpected UnsupportedEncodingException!");
         } catch (IllegalBlockSizeException e) {
-            System.err.println("Unexpected IllegalBlockSizeException!");
+            JOptionPane.showMessageDialog(null,"Unexpected IllegalBlockSizeException!");
         } catch (BadPaddingException e) {
-            System.err.println("Unexpected BadPaddingException!");
+            JOptionPane.showMessageDialog(null,"Unexpected BadPaddingException!");
         } catch (InvalidKeyException e) {
-            System.err.println("Unexpected InvalidKeyException!");
+            JOptionPane.showMessageDialog(null,"Unexpected InvalidKeyException!");
         } catch (NoSuchPaddingException e) {
-            System.err.println("Unexpected NoSuchPaddingException!");
+            JOptionPane.showMessageDialog(null,"Unexpected NoSuchPaddingException!");
         } catch (NoSuchAlgorithmException e) {
-            System.err.println("Unexpected NoSuchAlgorithmException!");
+            JOptionPane.showMessageDialog(null,"Unexpected NoSuchAlgorithmException!");
         }
         return messageID;
     }
 
+
+    //EFFECTS: This method adds the message which has been sent to the recipient's JSON file. Displays an
+    //appropriate message if an IOException is encountered.
     private void addMessageToRecipientJson(User recipient, Integer messageID, User sender,
                                            String msgContents, UrgencyLevel msgUrgency, String recipientFilePath) {
 
@@ -187,6 +208,9 @@ public class MessageUI extends JPanel {
     }
 
 
+    //MODIFIES: this
+    //EFFECTS: This method loads the recipient's hub from their specific file, so that the message can be added.
+    //Displays an appropriate message if an IOException is encountered.
     private void loadRecipientHub(User recipient, String fp) throws NoSuchPaddingException, NoSuchAlgorithmException {
         try {
             jsonReader = new JsonReader(fp, JSON_USERINFO);
@@ -200,6 +224,9 @@ public class MessageUI extends JPanel {
 
     }
 
+    //MODIFIES: this
+    //EFFECTS: Returns the user corresponding to the provided userID. Displays an appropriate message if an
+    // IOException is encountered.
     private User readUserFromFile(Integer id) {
         try {
 
@@ -214,11 +241,16 @@ public class MessageUI extends JPanel {
     }
 
 
+    //MODIFIES: this
+    //EFFECTS: Implements message search functionality, allowing users to search for specific messages based on
+    //message content.
     private void searchImplementation() {
         searchField = new JTextField(20);
         searchButton = new JButton("Search");
         searchButton.addActionListener(new ActionListener() {
             @Override
+            //EFFECTS: When the search button is clicked, the message are filtered based on the text provided in the
+            //search field.
             public void actionPerformed(ActionEvent e) {
                 searchMessages();
             }
@@ -234,6 +266,10 @@ public class MessageUI extends JPanel {
 
     }
 
+    //MODIFIES: this
+    //EFFECTS: Performs the search operation based on the text typed into the search field. Precautions are
+    //taken so that the system treats special characters normally and not as characters which serve special meanings in
+    //Regex.
     private void searchMessages() {
         String searchText = searchField.getText();
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) messagesTable.getModel());
@@ -246,6 +282,8 @@ public class MessageUI extends JPanel {
         }
     }
 
+    //MODIFIES: this
+    //EFFECTS: Initializes the table in which the messages are to be displayed.
     private void initComponents() {
         DefaultTableModel tableModel = new DefaultTableModel(
                 new Object[][][]{},
@@ -260,6 +298,9 @@ public class MessageUI extends JPanel {
         messagesTable.setVisible(true);
     }
 
+    //MODIFIES: this
+    //EFFECTS: This method takes the messages saved on file and adds them to the table in the Hub UI. Displays an
+    // appropriate message if an IOException is encountered.
     private void fillInMessageTable(JSONObject hubJson, DefaultTableModel tableModel) {
         try {
             if (new File(pathForSpecificUser).exists()) {
