@@ -24,6 +24,9 @@ import java.util.regex.Pattern;
 //This class represents the Messages Tab in the user's hub. It handles the displaying, searching and sending
 //of messages.
 
+//CITATIONS: The usage of the regexFilter to filter the different messages of the hub was referenced from
+// https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/javax/swing/RowFilter.html
+
 public class MessageUI extends JPanel {
     private JFrame frame;
     private User user;

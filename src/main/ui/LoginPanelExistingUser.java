@@ -12,6 +12,11 @@ import java.io.IOException;
 
 //This class represents the login panel which is displayed if the user is an existing user.
 
+//CITATIONS:
+// The usage of the UIManager to manipulate the size of the JOptionPanes was referenced from
+// https://mkyong.com/swing/java-swing-how-to-make-a-confirmation-dialog/
+// The displayed icons were made using Canva.
+
 public class LoginPanelExistingUser extends JPanel {
     private JTextField usernameField;
     private JPasswordField passwordField;

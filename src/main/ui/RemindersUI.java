@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 
 //This class represents the Reminders tab of the user's hub, managing the searching, viewing and adding of reminders.
+//CITATIONS: The usage of the regexFilter to filter the different reminders was referenced from
+// https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/javax/swing/RowFilter.html
 
 public class RemindersUI extends JPanel {
     private User user;

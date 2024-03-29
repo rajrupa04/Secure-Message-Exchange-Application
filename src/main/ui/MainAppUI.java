@@ -7,6 +7,13 @@ import java.awt.*;
 //This is the class representing the main user interface of the application. Upon running this class, the UI will
 //begin to display.
 
+//CITATIONS: the Java Swing syntax used in all the newly created UI classes has been referenced from
+// https://docs.oracle.com/javase%2Ftutorial%2Fuiswing%2F%2F/components/index.html and
+// https://docs.oracle.com/javase%2F7%2Fdocs%2Fapi%2F%2F/javax/swing/package-summary.html
+// The usage of the UIManager to manipulate the size of the JOptionPanes was referenced from
+// https://mkyong.com/swing/java-swing-how-to-make-a-confirmation-dialog/
+// The displayed icons were made using Canva.
+
 public class MainAppUI extends JPanel {
     private static final int WIDTH = 800;
     private static final int HEIGHT = 600;

@@ -10,6 +10,10 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 //This class represents the login panel which is displayed if the user is a new user without an existing account.
+//CITATIONS:
+// The usage of the UIManager to manipulate the size of the JOptionPanes was referenced from
+// https://mkyong.com/swing/java-swing-how-to-make-a-confirmation-dialog/
+// The displayed icons were made using Canva.
 
 public class LoginPanelNewUser extends JPanel {
     private JTextField nameOfUserField;

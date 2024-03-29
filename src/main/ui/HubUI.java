@@ -20,6 +20,12 @@ import java.security.NoSuchAlgorithmException;
 
 //This class represents the main hub user interface, allowing the user to manage notes, reminders, contacts, messages
 // and notifications.
+//CITATIONS:
+// The usage of the UIManager to manipulate the size of the JOptionPanes was referenced from
+// https://mkyong.com/swing/java-swing-how-to-make-a-confirmation-dialog/
+// The usage of the regexFilter to filter the different elements of the hub was referenced from
+// https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/javax/swing/RowFilter.html
+// The displayed icons were made using Canva.
 
 public class HubUI extends JPanel {
     private JTabbedPane hubTabs;

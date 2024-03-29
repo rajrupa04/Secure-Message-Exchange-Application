@@ -11,6 +11,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 //This class represents the user interface for managing the user's contact list.
+//CITATIONS: The usage of the regexFilter to filter the different contacts was referenced from
+// https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/javax/swing/RowFilter.html
+
 
 public class ContactListUI extends JPanel {
     private User user;
