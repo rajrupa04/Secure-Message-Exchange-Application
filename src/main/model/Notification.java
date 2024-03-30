@@ -22,6 +22,9 @@ public class Notification {
     //MODIFIES: this
     //EFFECTS: adds a notification for a specific urgency level
     public void addNotification(UrgencyLevel urgencyLevel, String message) {
+        EventLog.getInstance().logEvent(new Event("Added a new notification with urgency level: "
+                +
+                urgencyLevel + " and content: " + message + "."));
         notifications.put(urgencyLevel, message);
     }
 

@@ -1,5 +1,7 @@
 package ui;
 
+import model.Event;
+import model.EventLog;
 import model.User;
 import persistence.JsonReader;
 import persistence.JsonWriter;
@@ -147,6 +149,9 @@ public class LoginPanelNewUser extends JPanel {
 
     //EFFECTS: creates a new user in the system with the provided username and password, returning generated user ID.
     private Integer loginNewUser(String username, String password) {
+        EventLog.getInstance().logEvent(new Event("Added a new user with username: "
+                +
+                username + "."));
         user.createNewUser(username, password);
         Integer userID = user.getUserID();
         return userID;

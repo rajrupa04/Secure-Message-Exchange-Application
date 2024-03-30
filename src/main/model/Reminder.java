@@ -24,6 +24,9 @@ public class Reminder {
     //MODIFIES: this
     //EFFECTS: adds a new reminder with a specific date to the hashmap
     public void addNewReminder(LocalDate date, String reminderText) {
+        EventLog.getInstance().logEvent(new Event("Added a new reminder with reminder date: "
+                +
+                date.toString() + " and reminder content: " + reminderText + "."));
         reminders.put(date,reminderText);
     }
 

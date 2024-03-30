@@ -14,16 +14,12 @@
                 "Date": "2024-10-01"
             }
         ],
-        "MessageFolder": [
-
-        ],
+        "MessageFolder": [],
         "ContactList": [
             "raj2410",
             "khush12"
         ],
-        "Notifications": [
-
-        ],
+        "Notifications": [],
         "Notes": [
             {
                 "noteContent": "Note 10 for John",

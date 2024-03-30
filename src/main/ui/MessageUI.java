@@ -40,10 +40,12 @@ public class MessageUI extends JPanel {
     private static final String JSON_USERINFO = "./data/userinfo.json";
     private JTextField searchField;
     private JButton searchButton;
+    private EventLog eventLog;
 
     //MODIFIES: this
     //EFFECTS: Initializes the MessageUI object, sets up the layout and initializes components.
     public MessageUI(User user) {
+        eventLog = EventLog.getInstance();
         this.user = user;
         pathForSpecificUser = "./data/" + user.getUsername() + ".json";
         this.messageFolder = user.getHub().getMessageFolder();

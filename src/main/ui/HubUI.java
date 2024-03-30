@@ -1,5 +1,6 @@
 package ui;
 
+import model.EventLog;
 import model.Hub;
 import model.User;
 import org.json.JSONArray;
@@ -41,6 +42,7 @@ public class HubUI extends JPanel {
     private User user;
     private JButton quitWithoutSavingButton;
     private boolean notificationsDisplayed;
+    private EventLog eventLog;
 
 
     //MODIFIES: this
@@ -49,6 +51,7 @@ public class HubUI extends JPanel {
     // has been displayed.
     public HubUI(Boolean isExistingUser, User user) {
 
+        eventLog = EventLog.getInstance();
         this.user = user;
         notificationsDisplayed = false;
         initComponents(isExistingUser);
@@ -264,6 +267,7 @@ public class HubUI extends JPanel {
             JOptionPane.showMessageDialog(this, "Loaded " + user.getUsername()
                     +
                     "'s Hub from" + pathForSpecificUser);
+            eventLog.clear();
         } catch (IOException | NoSuchPaddingException | NoSuchAlgorithmException e) {
             JOptionPane.showMessageDialog(this,
                     "Error! Unable to read from file: " + pathForSpecificUser);

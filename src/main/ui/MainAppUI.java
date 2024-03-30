@@ -1,8 +1,14 @@
 package ui;
 
 import model.*;
+import model.Event;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.Iterator;
 
 //This is the class representing the main user interface of the application. Upon running this class, the UI will
 //begin to display.
@@ -20,6 +26,7 @@ public class MainAppUI extends JPanel {
     private static JFrame frame;
     private JDesktopPane desktop;
     private User user;
+    private EventLog eventLog;
 
     //MODIFIES: this
     //EFFECTS: constructs a new MainAppUI object, initialising the size, colour and state of the main frame
@@ -31,10 +38,18 @@ public class MainAppUI extends JPanel {
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 
+        eventLog = EventLog.getInstance();
 
         desktop = new JDesktopPane();
         desktop.setBackground(new Color(250,218,221));
         frame.add(desktop);
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                printLoggedEvents();
+            }
+        });
 
         boolean isNewUser = showNewUserDialog();
 
@@ -46,6 +61,16 @@ public class MainAppUI extends JPanel {
 
         frame.pack();
         frame.setVisible(true);
+    }
+
+    private void printLoggedEvents() {
+
+        Iterator<Event> iterator = eventLog.iterator();
+        while (iterator.hasNext()) {
+            Event event = iterator.next();
+            System.out.println(event.getDescription());
+        }
+
     }
 
     //MODIFIES: this
@@ -109,4 +134,5 @@ public class MainAppUI extends JPanel {
     public static void main(String[] args) {
         new MainAppUI();
     }
+
 }

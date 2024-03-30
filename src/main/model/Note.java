@@ -28,6 +28,9 @@ public class Note {
     //MODIFIES: this
     //EFFECTS: adds a new note with specified note ID to the hashmap
     public void addNote(Integer noteID, String text) {
+        EventLog.getInstance().logEvent(new Event("Added a new note with note ID: " + noteID
+                +
+                " and note content: " + text + "."));
         listOfNotes.put(noteID,text);
     }
 
@@ -43,6 +46,9 @@ public class Note {
     //MODIFIES: this
     //EFFECTS: removes the note with the specified note ID from the hashmap
     public void removeNote(Integer noteID) {
+        EventLog.getInstance().logEvent(new Event("Removed the note with note ID: " + noteID
+                +
+                "."));
         this.listOfNotes.remove(noteID);
     }
 

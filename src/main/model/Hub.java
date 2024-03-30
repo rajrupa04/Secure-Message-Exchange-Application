@@ -75,6 +75,11 @@ public class Hub implements Writable {
     public Integer sendMessage(User sender, User recipient, String messageContent, UrgencyLevel urgency)
             throws NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException,
             IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+
+        EventLog.getInstance().logEvent(new Event("Sent a message of urgency level "
+                + urgency.toString()
+                +
+                " from " + sender.getUsername() + " to " + recipient.getUsername() + "."));
         Message newMsg = new Message(sender, recipient, messageContent, urgency);
         Encryption e = new Encryption();
         String encryptedMessage = e.encryptMessage(messageContent, newMsg.getSharedKey());
