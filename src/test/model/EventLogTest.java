@@ -51,7 +51,7 @@ public class EventLogTest {
         EventLog el = EventLog.getInstance();
         el.clear();
         Iterator<Event> itr = el.iterator();
-        assertTrue(itr.hasNext());   // After log is cleared, the clear log event is added
+        assertTrue(itr.hasNext());
         assertEquals("Event log cleared.", itr.next().getDescription());
         assertFalse(itr.hasNext());
     }

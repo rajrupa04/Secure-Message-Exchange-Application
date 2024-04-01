@@ -24,7 +24,7 @@ public class Notification {
     public void addNotification(UrgencyLevel urgencyLevel, String message) {
         EventLog.getInstance().logEvent(new Event("Added a new notification with urgency level: "
                 +
-                urgencyLevel + " and content: " + message + "."));
+                urgencyLevel + " and content: " + message + " to recipient's hub."));
         notifications.put(urgencyLevel, message);
     }
 

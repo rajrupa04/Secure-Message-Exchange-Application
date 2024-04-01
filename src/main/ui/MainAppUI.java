@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Iterator;
 
 //This is the class representing the main user interface of the application. Upon running this class, the UI will
@@ -63,6 +62,8 @@ public class MainAppUI extends JPanel {
         frame.setVisible(true);
     }
 
+    //EFFECTS: Iterates through the eventlog and prints all the logged events to console when the main
+    //window is closed.
     private void printLoggedEvents() {
 
         Iterator<Event> iterator = eventLog.iterator();

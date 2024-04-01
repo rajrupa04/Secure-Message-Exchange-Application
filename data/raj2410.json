@@ -15,7 +15,9 @@
             }
         ],
         "MessageFolder": [],
-        "ContactList": ["john_doe"],
+        "ContactList": [
+            "john_doe"
+        ],
         "Notifications": [],
         "Notes": [
             {

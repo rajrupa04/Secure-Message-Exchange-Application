@@ -1,5 +1,6 @@
 package ui;
 
+import model.Event;
 import model.EventLog;
 import model.Hub;
 import model.User;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
 
 //This class represents the main hub user interface, allowing the user to manage notes, reminders, contacts, messages
 // and notifications.
@@ -102,13 +104,19 @@ public class HubUI extends JPanel {
 
     }
 
-    //EFFECTS: Asks the user if they are sure they want to quit without saving. If they choose yes, the program quits.
+    //EFFECTS: Asks the user if they are sure they want to quit without saving. If they choose yes, the program
+    //iterates through the eventlog and prints all the logged events to console before quitting.
     private void quitWithoutSavingImplementation() {
         int confirmed = JOptionPane.showConfirmDialog(null,
                 "Are you sure you want to quit without saving your hub?", "Quit Confirmation",
                 JOptionPane.YES_NO_OPTION);
 
         if (confirmed == JOptionPane.YES_OPTION) {
+            Iterator<model.Event> iterator = eventLog.iterator();
+            while (iterator.hasNext()) {
+                Event event = iterator.next();
+                System.out.println(event.getDescription());
+            }
             System.exit(0);
         }
     }

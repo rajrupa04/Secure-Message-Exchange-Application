@@ -55,3 +55,12 @@ urgent messages if needed.
 
 
 - You can **reload** the state of my application just after logging in successfully, if you are an existing user who has a saved hub. When the prompt to reload the hub from file is presented, clicking **yes** will allow you to reload the hub from file. Clicking **no** will generate a new empty hub for you. 
+
+## Phase 4: Task 2
+- Added a new user with username: florence123.  
+- Added a new note with note ID: 4 and note content: new note 4!.  
+- Added a new note with note ID: 1 and note content: Today is a sunny day!.  
+- Removed the note with note ID: 1.  
+- Added a new reminder with reminder date: 2024-04-19 and reminder content: CPSC 210 final.  
+- Sent a message of urgency level REGULAR from florence123 to john_doe.  
+- Added a new notification with urgency level: REGULAR and content: You have 1 new message of type: REGULAR to recipient's hub.
