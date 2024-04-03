@@ -63,4 +63,11 @@ urgent messages if needed.
 - Removed the note with note ID: 1.  
 - Added a new reminder with reminder date: 2024-04-19 and reminder content: CPSC 210 final.  
 - Sent a message of urgency level REGULAR from florence123 to john_doe.  
-- Added a new notification with urgency level: REGULAR and content: You have 1 new message of type: REGULAR to recipient's hub.
+- Added a new notification with urgency level: REGULAR and content: You have 1 new message of type: REGULAR to recipient's hub.  
+
+
+## Phase 4: Task 3
+Upon reflection of my design, I noticed that there is a high level of coupling among my classes. This would make my code more difficult to work with in the future if I wish to introduce more functionality. So, in order to refactor my code to make it more future-proof, I would try converting some of my classes to interfaces or abstract classes
+ to make them more flexible to work with.  
+I could also refactor my code by utilising the Singleton Pattern in my Hub class, since a user can only have one hub. This would make its usage more convenient since I only have to access the single instance of the Hub from anywhere in my codebase. This could also potentially improve the resource management and memory usage of my application.  
+Lastly, I might consider refactoring some of the data structures used in my model package, since my usage of Hashmaps in my Note and Reminder classes (for instance), causes any entries with a duplicate key (in my case, a duplicate Note ID or a duplicate Reminder date) to overwrite the pre-existing entry. I could refactor those classes by using a 2D list, so that no restrictions are imposed on having duplicate keys. In addition, I could also update my existing functionality so that it lets the user know that they have entered a duplicate key, and that the pre-existing entry will be updated. 
