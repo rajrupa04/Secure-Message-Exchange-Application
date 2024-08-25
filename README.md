@@ -1,4 +1,4 @@
-Secure message exchange application
+# Secure message exchange application
 
 ## What will the application do?
 This application will be able to carry out the following tasks:
